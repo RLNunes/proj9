@@ -1,11 +1,15 @@
 let vIsAdmin = 'N'
 
-// TOKEN_SERVICE é a chave de API estática usada para autenticar pedidos ao Payara.
-// É o mesmo valor configurado no JNDI TOKEN_SERVICE do Payara.
+// TOKEN_SERVICE é a chave de API estática configurada como JNDI resource TOKEN_SERVICE no Payara.
+// O valor é o mesmo que está em Payara/domain.xml. Todos os pedidos ao Payara precisam deste token
+// no header "token". Em produção, este valor deveria ser obtido via pedido autenticado ao servidor.
 const TOKEN_SERVICE = 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY3MDI2ODYzOCwiaWF0IjoxNjcwMjY4NjM4fQ.uygunXd7eT8C0ZXc8Cfqnn-l9zGi3Rg9QWRkIxsThvg';
 
 // Retorna o token de serviço se o utilizador tiver sessão iniciada, ou '' caso contrário.
 // A sessão é guardada em localStorage pela função login().
+// Nota: localStorage pode ser manipulado pelo utilizador no browser; idealmente a verificação
+// de sessão seria feita server-side. Nesta arquitetura estática, o token é validado pelo Payara
+// a cada pedido via o header "token".
 async function getToken() {
   let token = localStorage.token;
   if (token) {
@@ -35,12 +39,6 @@ async function getAdminToken() {
 // pelo que /api/CircPeticionario/webresources/... chega corretamente ao Payara.
 function getUrlPayaraDireto() {
   return Promise.resolve('/api');
-}
-
-// getUrlNode() já não é necessária (Node foi substituído pelo Nginx),
-// mas mantém-se por compatibilidade com login.js e utilizador.js.
-function getUrlNode() {
-  return Promise.resolve('');
 }
 
 // Devolve o estado de administrador a partir do localStorage.
