@@ -1,0 +1,65 @@
+networks:
+  network_circ_peticionario:
+    external: true
+                
+volumes:
+  postgres_data: {}
+
+services:
+
+  # SGBD - PostgreSQL
+  data_base:
+    image: postgres:14
+    container_name: circ_peticionario_cnt_db
+    hostname: circ.peticionario.db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./DataBase/schema:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=proj_fapesp
+    ports:
+      - '5432:5432'   # SGBD
+    networks:
+      - network_circ_peticionario
+    restart: unless-stopped
+
+  # App - Node.js
+  srv_app:
+    build:
+      context: ./FrontEnd
+      dockerfile: Dockerfile
+    image: circ_peticionario_image_app  
+    container_name: circ_peticionario_cnt_app
+    hostname: circ.peticionario.app
+    working_dir: /app
+    environment:
+      - PORT=8080
+    ports:
+      - '9081:8080'     # Web Server
+      - '2222:22'       # SSH Server
+    depends_on:
+      - data_base
+    command: ["node", "index.js"]
+    networks:
+      - network_circ_peticionario
+    restart: unless-stopped
+
+  # Payara
+  payara:
+    build:
+      context: ./Payara
+      dockerfile: Dockerfile
+    image: circ_peticionario_image_payara
+    container_name: circ_peticionario_cnt_payara
+    hostname: circ.peticionario.payara
+    environment:
+      - ADMIN_USER=admin
+      - ADMIN_PASSWORD=admin
+    ports:
+      - '9082:8080'     # Web Server
+      - '9848:4848'     # Payara Admin Web Console
+    networks:
+      - network_circ_peticionario
+    restart: unless-stopped

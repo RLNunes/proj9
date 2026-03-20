@@ -1,0 +1,7 @@
+# Ignorar ficheiros do Git
+.git
+.gitignore
+
+# Ignorar ficheiros "Docker"
+.dockerignore
+Dockerfile

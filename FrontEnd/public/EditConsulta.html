@@ -1,0 +1,2353 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Circuitos Oceânicos</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+    integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/all.css" />
+  <!-- Include Bootstrap Datepicker -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+
+  <script src="./js/sweetalert2.all.min.js"></script>
+
+
+  <link rel="stylesheet" href="./css/style.css" />
+  <script src="./js/menu.js"></script>
+  <script src="./js/consulta.js"></script>
+
+  <script>
+    let v_idCons = sessionStorage.getItem("v_idCons");
+    async function showMenu() {
+      document.getElementById("menu").innerHTML = await getMenu('cons', 0);
+    }
+
+    function limpaRefDoc() {
+      document.getElementById("ref_doc").value = "";
+      document.getElementById("ref_docValue").value = "";
+    }
+
+
+  </script>
+</head>
+
+<body>
+  <div id="menu"></div>
+  <table width="100%">
+    <tr>
+      <td width="50%" align="left">
+        <h1><div id="IdCons">Consulta</div></h1>
+      </td>
+      <td width="50%" align="right" style="padding-right: 50px; padding-top: 20px;">
+        <button type="button" class="btn btn-info" onclick="cancelar();">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" onclick="salvar();">
+          Guardar
+        </button>
+        <button type="button" id="btnDel" class="btn btn-danger" style="visibility: hidden;" onclick="delCons();">
+          Eliminar
+        </button>
+      </td>
+    </tr>
+  </table>
+  <form>
+    <div class="row">
+      <div id="Coluna1" class="column">
+        <label for="registroAdd">Registro</label>
+        <div class="form-floating input-group">
+          <input type="text" class="form-control lovPopUp" id="registroAdd" placeholder="Registro" disabled>
+          <div class="input-group-append">
+            <span class="fa fa-list input-group-text registroAdd" type="button" data-toggle="modal"
+              data-target="#modalRegistro">
+            </span>
+          </div>
+        </div>
+        <input type="hidden" id="registroAddValue">
+        <div class="row">
+          <div class="col-sm-5">
+            <!-- Date Picker Data Consulta  -->
+            <div class="dates">
+              <label for="anoCons">Data</label>
+              <div class="start_date input-group mb-4">
+                <input class="form-control datepicker" type="text" placeholder="Data" id="datCons">
+                <div class="input-group-append">
+                  <span class="fa fa-calendar input-group-text datCons" aria-hidden="true "></span>
+                </div>
+              </div>
+              <!-- Fim datePicker Data Consulta -->
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <label for="anoCons" style="margin-top: 10px;">Ano</label>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="anoCons" placeholder="Ano">
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-floating" style="margin-top:40px; margin-left:0px; margin-right: 0px; width: 100%;">
+              <input type="checkbox" id="anoAnt" name="anoAnt" value="A">
+              <label for="anoAnt" style="font-size: 15px;">Anterior</label><br>
+              <input type="checkbox" id="anoPos" name="anoPos" value="Y">
+              <label for="anoPos" style="font-size: 15px;">Posterior</label>
+            </div>
+          </div>
+        </div>
+        <label for="ref_doc">Referência Documental</label>
+        <div class="form-floating input-group" style="width: 90%;">
+          <input type="text" class="form-control" id="ref_doc" placeholder="Referência Documental" disabled>
+          <div class="input-group-append">
+            <span class="fa fa-list input-group-text ref_doc" type="button" data-toggle="modal"
+              data-target="#modalRefDoc">
+            </span>
+            <span class="fa fa-broom btn btn-danger input-group-text ref_doc" type="button" data-toggle="modal"
+              onclick="limpaRefDoc()">
+            </span>
+          </div>
+        </div>
+        <input type="hidden" id="ref_docValue">
+        <!-- Categoria -->
+        <div id="categoria" class="form-floating input-group"></div>
+        <br>
+        <div style="margin-right: 30px;">
+          <label for="numAdd">Fólio/Página</label>
+          <input type="text" id="folioPagina" class="md-textarea form-control" rows="1">
+        </div>
+      </div>
+      <div id="Coluna2" class="column">
+        <div>
+          <label for="consObs">Resumo</label>
+          <textarea id="consObs" class="md-textarea form-control" rows="3"></textarea>
+        </div>
+
+        <!-- Lista de Tabelas -->
+        <div class="row" style="margin-top: 20px;">
+          <div class="col-sm-6">
+            <div id="requerente" class="lisTab">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div id="pesCitadas" class="lisTab">
+            </div>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+          <div class="col-sm-4">
+            <div id="tema" class="lisTab">
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div id="palavraChave" class="lisTab">
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div id="secEstado" class="lisTab">
+            </div>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+          <div class="col-sm-3">
+            <!-- Date Picker Data Parecer Régio  -->
+            <label for="datParReal">Data Parecer Real</label>
+            <div class="start_date input-group mb-4">
+              <input class="form-control datepicker" type="text" placeholder="Data" id="datParReal">
+              <div class="input-group-append">
+                <span class="fa fa-calendar input-group-text datParReal" aria-hidden="true "></span>
+              </div>
+              <!-- Fim datePicker Data Parecer Régio -->
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <label for="parReal">Parecer Real</label>
+            <input type="text" id="parReal" class="md-textarea form-control" rows="1">
+          </div>
+          <div class="col-sm-10">
+            <label for="sumula">Sumula</label>
+            <textarea id="sumula" class="md-textarea form-control" rows="3"></textarea>
+          </div>
+        </div>
+        <div id="Local" style="border:1px solid; margin-top: 20px; padding-bottom: 10px;">
+          <div style="margin: 20px;">
+            <p style="font-size:15px;"><b>Local</b></p>
+
+          </div>
+          <div class="row" style="margin-top: 20px;">
+            <div class="col-sm-3">
+              <div id="termo" class="lisTab">
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div id="freguesia" class="lisTab">
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div id="comarca" class="lisTab">
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div id="capitania" class="lisTab">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div id="DocRel" width="80%" style="border:1px solid; margin-top: 20px;">
+        <div style="margin: 20px;">
+          <p style="font-size:20px;"><b>Documentos Relacionados</b></p>
+
+        </div>
+        <div class="row row-cols-5" style="margin-top: 20px; margin-bottom: 20px;">
+          <div class="col" style="margin-bottom: 20px;">
+            <div id="provocacao" class="lisTab">
+              provocacao
+            </div>
+          </div>
+          <div class="col">
+            <div id="mandado" class="lisTab">
+              mandado
+            </div>
+          </div>
+          <div class="col">
+            <div id="consulta" class="lisTab">
+              consulta
+            </div>
+          </div>
+          <div class="col">
+            <div id="ultramar" class="lisTab">
+              ultramar
+            </div>
+          </div>
+          <div class="col">
+            <div id="resposta" class="lisTab">
+              resposta
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+
+  <!-- ************************ Modals Popup ************************ -->
+  <!--************************ Referencia Documental ************************-->
+  <div class="modal" id="modalRefDoc">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Referência documental</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procrefDoc" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="listRefDoc(document.getElementById('procrefDoc').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabRefDoc" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">Fechar</button>
+          <button type="button" id="btnAdd" class="btn btn-danger" onclick="goToModalRef();">Criar Referência</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--***************************************-->
+  <!-- Modal Criar Referencia -->
+  <!--***************************************-->
+  <div class="modal" id="criarRefDoc">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Referência Documental</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Modal body -->
+
+
+        <div class="modal-body">
+          <input type="hidden" id="ref_docValue">
+          <label for="refDocAdd">Referência</label>
+          <input type="text" id="refDocAdd" class="md-textarea form-control" rows="1">
+          <br>
+          <label for="compAdd">Complemento</label>
+          <input type="text" id="compAdd" class="md-textarea form-control" rows="1" maxlength="10">
+          <br>
+          <label for="urlAdd">URL</label>
+          <input type="text" id="urlAdd" class="md-textarea form-control" rows="1">
+          <br>
+          <div id="tipRef"></div>
+
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" id="btnAdd" class="btn btn-danger" onclick="addRefDoc();">Criar</button>
+          <button type="button" class="btn" onclick="cancelModalRef();">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal Criar  -->
+
+  <!--************************ Registro ************************-->
+  <div class="modal" id="modalRegistro">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4>Registro</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procRegistro" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="listRegistroAdd(0,document.getElementById('procRegistro').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabRegistro" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- Modal XPTO -->
+  <div class="modal" id="xpto2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ************************ Secretário/Concelheiro ************************ -->
+  <div class="modal" id="modalSecEstado">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Secretário / Conselheiro</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procSecEst" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectSecEstado(v_manId,document.getElementById('procSecEst').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabSecEstado" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ************************ Pessoas Citadas ************************ -->
+  <div class="modal" id="modalPesCita">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Pessoas Citadas</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procPesCita" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectPesCitada(v_idCons,document.getElementById('procPesCita').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalPesCitada" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="criarPessoa();">Criar Pessoa</button>
+          <button type="button" class="btn" data-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ************************ Palavra Chave ************************ -->
+  <div class="modal" id="modalPalChave">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Palavras Chaves</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procPalChave" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectPalChave(v_idCons,document.getElementById('procPalChave').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalPalChave" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ************************ Requerente ************************ -->
+  <div class="modal" id="modalRequerente">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Requerente</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procRequerente" placeholder="Procurar"
+            aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectRequerente(v_idCons,document.getElementById('procRequerente').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalRequerente" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="criarPessoa();">Criar Pessoa</button>
+          <button type="button" class="btn" data-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ************************ Tema ************************ -->
+  <div class="modal" id="modalTema">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Tema</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procTema" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectTema(v_idCons,document.getElementById('procTema').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalTema" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ************************ Local ************************ -->
+  <!-- ************************ Termo ************************ -->
+  <div class="modal" id="modalTermo">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Termo</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procTermo" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectTermo(v_idCons,document.getElementById('procTermo').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalTermo" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- ************************ Freguesia ************************ -->
+  <div class="modal" id="modalFreguesia">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Freguesia</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procFreguesia" placeholder="Procurar"
+            aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectFreguesia(v_idCons,document.getElementById('procFreguesia').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalFreguesia" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- ************************ Comarca ************************ -->
+  <div class="modal" id="modalComarca">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Comarca</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procComarca" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectComarca(v_idCons,document.getElementById('procComarca').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalComarca" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- ************************ Capitania ************************ -->
+  <div class="modal" id="modalCapitania">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Capitania</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procCapitania" placeholder="Procurar"
+            aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectCapitania(v_idCons,document.getElementById('procCapitania').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalCapitania" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--*********************Documentos Relacionados ***********************-->
+
+
+
+  <!--************************************************************************-->
+  <!--************************  Filtro ***************************************-->
+  <!--************************************************************************-->
+
+  <!--************************ Termo ************************-->
+  <div class="modal" id="modalTemoFiltro">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Termo</h4>
+          <button type="button" class="btn" onclick="closelistFiltroTermo()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procTermoFiltro" placeholder="Procurar"
+            aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="listFiltroTermo(document.getElementById('procTermoFiltro').value,document.getElementById('origemTermo').value)">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabTermoFiltro" class="modal-body">
+
+        </div>
+
+        <input type="hidden" id="origemTermo">
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" onclick="closelistFiltroTermo()">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--************************ Capitania ************************-->
+  <div class="modal" id="modalCapiFiltro">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Capitania</h4>
+          <button type="button" class="btn" onclick="closelistFiltroCapi()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procCapiFiltro" placeholder="Procurar"
+            aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="listFiltroCapitania(document.getElementById('procCapiFiltro').value,document.getElementById('origemCapitania').value)">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabCapiFiltro" class="modal-body">
+
+        </div>
+
+        <input type="hidden" id="origemCapitania">
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" onclick="closelistFiltroCapi()">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--************************ Freguesia ************************-->
+  <div class="modal" id="modalFregFiltro">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Freguesia</h4>
+          <button type="button" class="btn" onclick="closelistFiltroFreg()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procFregFiltro" placeholder="Procurar"
+            aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="listFiltroFreguesia(document.getElementById('procFregFiltro').value,document.getElementById('origemFreguesia').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabFregFiltro" class="modal-body">
+
+        </div>
+        <input type="hidden" id="origemFreguesia">
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" onclick="closelistFiltroFreg()">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--************************ Comarca ************************-->
+  <div class="modal" id="modalComaFiltro">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Comarca</h4>
+          <button type="button" class="btn" onclick="closelistFiltroComa()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procComaFiltro" placeholder="Procurar"
+            aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="listFiltroComarca(document.getElementById('procComaFiltro').value,document.getElementById('origemComarca').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabComaFiltro" class="modal-body">
+
+        </div>
+        <input type="hidden" id="origemComarca">
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" onclick="closelistFiltroComa()">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ************************ Provocação ************************ -->
+  <div class="modal" id="modalProvocacao">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Provocação</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procProvocacao" placeholder="Procurar"
+            aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectProvocacao(v_idCons,document.getElementById('procProvocacao').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="row">
+            <div id="tabmodalProvoFiltro" class="col-sm-5 tabmodalFiltro">
+              <h4 style="text-align: center;"><b>Filtro</b></h4>
+
+              <label for="termoFiltro">Termo</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="termoFiltro" placeholder="Termo" disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text termoFiltro" type="button"
+                    onclick="listFiltroTermo('','provocacao')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="termoFiltroValue">
+
+              <label for="capitaniaFiltro">Capitania</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="capitaniaFiltro" placeholder="Capitania"
+                  disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text capitaniaFiltro" type="button"
+                    onclick="listFiltroCapitania('','provocacao')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="capitaniaFiltroValue">
+
+              <label for="freguesiaFiltro">Freguesia</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="freguesiaFiltro" placeholder="Freguesia"
+                  disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text freguesiaFiltro" type="button"
+                    onclick="listFiltroFreguesia('','provocacao')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="freguesiaFiltroValue">
+
+              <label for="comarcaFiltro">Comarca</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="comarcaFiltro" placeholder="Comarca" disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text comarcaFiltro" type="button"
+                    onclick="listFiltroComarca('','provocacao')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="comarcaFiltroValue">
+
+              <label for="filtDatas">Datas</label>
+              <div id="filtDatas" class="row-cols-1" style="border: solid 1px; margin: 2px; margin-top: 0px;">
+                <div class="col">
+                  <!-- Date Picker Data de  -->
+                  <div class="dates">
+                    <label for="filtroDe">De</label>
+                    <div class="start_date input-group mb-4">
+                      <input class="form-control datepicker" type="text" placeholder="Data" id="filtroDe"
+                        onchange="selectProvocacao(v_idCons,document.getElementById('procProvocacao').value);">
+                      <div class="input-group-append">
+                        <span class="fa fa-calendar input-group-text datProv" aria-hidden="true "></span>
+                      </div>
+                    </div>
+                    <!-- Fim datePicker Data de -->
+                  </div>
+                </div>
+                <div class="col">
+                  <!-- Date Picker Data a  -->
+                  <div class="dates">
+                    <label for="filtroA">A</label>
+                    <div class="start_date input-group mb-4">
+                      <input class="form-control datepicker" type="text" placeholder="Data" id="filtroA"
+                        onchange="selectProvocacao(v_idCons,document.getElementById('procProvocacao').value);">
+                      <div class="input-group-append">
+                        <span class="fa fa-calendar input-group-text datProv" aria-hidden="true "></span>
+                      </div>
+                    </div>
+                    <!-- Fim datePicker Data de -->
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-info" onclick="limparFiltro()" style="margin: 5px;">Limpar</button>
+            </div>
+            <div id="tabmodalProvocacao" class="col-lg tabmodalRes">
+            </div>
+          </div>
+
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ************************ Mandado ************************ -->
+  <div class="modal" id="modalMandado">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Mandado</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procMandado" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectMandado(v_idCons,document.getElementById('procMandado').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="row">
+            <div id="tabmodalProvoFiltro" class="col-sm-5 tabmodalFiltro">
+              <h4 style="text-align: center;"><b>Filtro</b></h4>
+              <label for="termoFiltroMan">Termo</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="termoFiltroMan" placeholder="Termo" disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text termoFiltroMan" type="button"
+                    onclick="listFiltroTermo('','mandado')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="termoFiltroValueMan">
+
+              <label for="capitaniaFiltroMan">Capitania</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="capitaniaFiltroMan" placeholder="Capitania"
+                  disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text capitaniaFiltroMan" type="button" data-toggle="modal"
+                    onclick="listFiltroCapitania('','mandado');">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="capitaniaFiltroValueMan">
+
+              <label for="freguesiaFiltroMan">Freguesia</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="freguesiaFiltroMan" placeholder="Freguesia"
+                  disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text freguesiaFiltroMan" type="button" data-toggle="modal"
+                    onclick="listFiltroFreguesia('','mandado')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="freguesiaFiltroValueMan">
+
+              <label for="comarcaFiltroMan">Comarca</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="comarcaFiltroMan" placeholder="Comarca"
+                  disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text comarcaFiltroMan" type="button" data-toggle="modal"
+                    onclick="listFiltroComarca('','mandado')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="comarcaFiltroValueMan">
+
+              <label for="filtDatas">Datas</label>
+              <div id="filtDatas" class="row-cols-1" style="border: solid 1px; margin: 2px; margin-top: 0px;">
+                <div class="col">
+                  <!-- Date Picker Data de  -->
+                  <div class="dates">
+                    <label for="filtroDe">De</label>
+                    <div class="start_date input-group mb-4">
+                      <input class="form-control datepicker" type="text" placeholder="Data" id="filtroDeMan"
+                        onchange="selectMandado(v_idCons,document.getElementById('procMandado').value);">
+                      <div class="input-group-append">
+                        <span class="fa fa-calendar input-group-text datProv" aria-hidden="true "></span>
+                      </div>
+                    </div>
+                    <!-- Fim datePicker Data de -->
+                  </div>
+                </div>
+                <div class="col">
+                  <!-- Date Picker Data a  -->
+                  <div class="dates">
+                    <label for="filtroA">A</label>
+                    <div class="start_date input-group mb-4">
+                      <input class="form-control datepicker" type="text" placeholder="Data" id="filtroAMan"
+                        onchange="selectMandado(v_idCons,document.getElementById('procMandado').value);">
+                      <div class="input-group-append">
+                        <span class="fa fa-calendar input-group-text datProv" aria-hidden="true "></span>
+                      </div>
+                    </div>
+                    <!-- Fim datePicker Data de -->
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-info" onclick="limparFiltroMan()"
+                style="margin: 5px;">Limpar</button>
+            </div>
+            <div id="tabmodalMandado" class="col-lg tabmodalRes">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ************************ Consulta ************************ -->
+  <div class="modal" id="modalConsulta">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Consulta</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procConsulta" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectConsulta(v_idCons,document.getElementById('procConsulta').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="row">
+            <div id="tabmodalProvoFiltro" class="col-sm-5 tabmodalFiltro">
+              <h4 style="text-align: center;"><b>Filtro</b></h4>
+              <label for="termoFiltro">Termo</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="termoFiltroCon" placeholder="Termo" disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text termoFiltroCon" type="button" data-toggle="modal"
+                    onclick="listFiltroTermo('','consulta')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="termoFiltroValueCon">
+
+              <label for="capitaniaFiltro">Capitania</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="capitaniaFiltroCon" placeholder="Capitania"
+                  disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text capitaniaFiltroCon" type="button" data-toggle="modal"
+                    onclick="listFiltroCapitania('','consulta');">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="capitaniaFiltroValueCon">
+
+              <label for="freguesiaFiltro">Freguesia</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="freguesiaFiltroCon" placeholder="Freguesia"
+                  disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text freguesiaFiltroCon" type="button" data-toggle="modal"
+                    onclick="listFiltroFreguesia('','consulta')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="freguesiaFiltroValueCon">
+
+              <label for="comarcaFiltro">Comarca</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="comarcaFiltroCon" placeholder="Comarca"
+                  disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text comarcaFiltroCon" type="button" data-toggle="modal"
+                    onclick="listFiltroComarca('','consulta')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="comarcaFiltroValueCon">
+
+              <label for="filtDatas">Datas</label>
+              <div id="filtDatas" class="row-cols-1" style="border: solid 1px; margin: 2px; margin-top: 0px;">
+                <div class="col">
+                  <!-- Date Picker Data de  -->
+                  <div class="dates">
+                    <label for="filtroDe">De</label>
+                    <div class="start_date input-group mb-4">
+                      <input class="form-control datepicker" type="text" placeholder="Data" id="filtroDeCon"
+                        onchange="selectConsulta(v_idCons,document.getElementById('procConsulta').value);">
+                      <div class="input-group-append">
+                        <span class="fa fa-calendar input-group-text datProv" aria-hidden="true "></span>
+                      </div>
+                    </div>
+                    <!-- Fim datePicker Data de -->
+                  </div>
+                </div>
+                <div class="col">
+                  <!-- Date Picker Data a  -->
+                  <div class="dates">
+                    <label for="filtroA">A</label>
+                    <div class="start_date input-group mb-4">
+                      <input class="form-control datepicker" type="text" placeholder="Data" id="filtroACon"
+                        onchange="selectConsulta(v_idCons,document.getElementById('procConsulta').value);">
+                      <div class="input-group-append">
+                        <span class="fa fa-calendar input-group-text datProv" aria-hidden="true "></span>
+                      </div>
+                    </div>
+                    <!-- Fim datePicker Data de -->
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-info" onclick="limparFiltroCon()"
+                style="margin: 5px;">Limpar</button>
+            </div>
+            <div id="tabmodalConsulta" class="col-lg tabmodalRes">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ************************ Ultramar ************************ -->
+  <div class="modal" id="modalUltramar">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Ultramar</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procUltramar" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectUltramar(v_idCons,document.getElementById('procUltramar').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="row">
+            <div id="tabmodalProvoFiltro" class="col-sm-5 tabmodalFiltro">
+              <h4 style="text-align: center;"><b>Filtro</b></h4>
+              <label for="termoFiltro">Termo</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="termoFiltroUltra" placeholder="Termo" disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text termoFiltroUltra" type="button" data-toggle="modal"
+                    onclick="listFiltroTermo('','ultramar')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="termoFiltroValueUltra">
+
+              <label for="capitaniaFiltro">Capitania</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="capitaniaFiltroUltra" placeholder="Capitania"
+                  disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text capitaniaFiltroUltra" type="button" data-toggle="modal"
+                    onclick="listFiltroCapitania('','ultramar');">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="capitaniaFiltroValueUltra">
+
+              <label for="freguesiaFiltro">Freguesia</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="freguesiaFiltroUltra" placeholder="Freguesia"
+                  disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text freguesiaFiltroUltra" type="button" data-toggle="modal"
+                    onclick="listFiltroFreguesia('','ultramar')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="freguesiaFiltroValueUltra">
+
+              <label for="comarcaFiltro">Comarca</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="comarcaFiltroUltra" placeholder="Comarca"
+                  disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text comarcaFiltro" type="button" data-toggle="modal"
+                    onclick="listFiltroComarca('','ultramar')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="comarcaFiltroValueUltra">
+
+              <label for="filtDatas">Datas</label>
+              <div id="filtDatas" class="row-cols-1" style="border: solid 1px; margin: 2px; margin-top: 0px;">
+                <div class="col">
+                  <!-- Date Picker Data de  -->
+                  <div class="dates">
+                    <label for="filtroDe">De</label>
+                    <div class="start_date input-group mb-4">
+                      <input class="form-control datepicker" type="text" placeholder="Data" id="filtroDeUltra"
+                        onchange="selectUltramar(v_idCons,document.getElementById('procUltramar').value);">
+                      <div class="input-group-append">
+                        <span class="fa fa-calendar input-group-text datProv" aria-hidden="true "></span>
+                      </div>
+                    </div>
+                    <!-- Fim datePicker Data de -->
+                  </div>
+                </div>
+                <div class="col">
+                  <!-- Date Picker Data a  -->
+                  <div class="dates">
+                    <label for="filtroA">A</label>
+                    <div class="start_date input-group mb-4">
+                      <input class="form-control datepicker" type="text" placeholder="Data" id="filtroAUltra"
+                        onchange="selectUltramar(v_idCons,document.getElementById('procUltramar').value);">
+                      <div class="input-group-append">
+                        <span class="fa fa-calendar input-group-text datProv" aria-hidden="true "></span>
+                      </div>
+                    </div>
+                    <!-- Fim datePicker Data de -->
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-info" onclick="limparFiltroUltra()"
+                style="margin: 5px;">Limpar</button>
+            </div>
+            <div id="tabmodalUltramar" class="col-lg tabmodalRes">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ************************ Respostas ************************ -->
+  <div class="modal" id="modalResposta">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Resposta</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procResposta" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectResposta(v_idCons,document.getElementById('procResposta').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="row">
+            <div id="tabmodalProvoFiltro" class="col-sm-5 tabmodalFiltro">
+              <h4 style="text-align: center;"><b>Filtro</b></h4>
+
+              <label for="termoFiltro">Termo</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="termoFiltroRes" placeholder="Termo" disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text termoFiltro" type="button" data-toggle="modal"
+                    onclick="listFiltroTermo('','resposta')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="termoFiltroValueRes">
+
+              <label for="capitaniaFiltro">Capitania</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="capitaniaFiltroRes" placeholder="Capitania"
+                  disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text capitaniaFiltro" type="button" data-toggle="modal"
+                    onclick="listFiltroCapitania('','resposta');">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="capitaniaFiltroValueRes">
+
+              <label for="freguesiaFiltro">Freguesia</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="freguesiaFiltroRes" placeholder="Freguesia"
+                  disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text freguesiaFiltro" type="button" data-toggle="modal"
+                    onclick="listFiltroFreguesia('','resposta')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="freguesiaFiltroValueRes">
+
+              <label for="comarcaFiltro">Comarca</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control lovPopUpPeq" id="comarcaFiltroRes" placeholder="Comarca"
+                  disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text comarcaFiltro" type="button" data-toggle="modal"
+                    onclick="listFiltroComarca('','resposta')">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="comarcaFiltroValueRes">
+
+              <label for="filtDatas">Datas</label>
+              <div id="filtDatas" class="row-cols-1" style="border: solid 1px; margin: 2px; margin-top: 0px;">
+                <div class="col">
+                  <!-- Date Picker Data de  -->
+                  <div class="dates">
+                    <label for="filtroDe">De</label>
+                    <div class="start_date input-group mb-4">
+                      <input class="form-control datepicker" type="text" placeholder="Data" id="filtroDeRes"
+                        onchange="selectResposta(v_idCons,document.getElementById('procResposta').value);">
+                      <div class="input-group-append">
+                        <span class="fa fa-calendar input-group-text datProv" aria-hidden="true "></span>
+                      </div>
+                    </div>
+                    <!-- Fim datePicker Data de -->
+                  </div>
+                </div>
+                <div class="col">
+                  <!-- Date Picker Data a  -->
+                  <div class="dates">
+                    <label for="filtroA">A</label>
+                    <div class="start_date input-group mb-4">
+                      <input class="form-control datepicker" type="text" placeholder="Data" id="filtroARes"
+                        onchange="selectResposta(v_idCons,document.getElementById('procResposta').value);">
+                      <div class="input-group-append">
+                        <span class="fa fa-calendar input-group-text datProv" aria-hidden="true "></span>
+                      </div>
+                    </div>
+                    <!-- Fim datePicker Data de -->
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-info" onclick="limparFiltroRes()"
+                style="margin: 5px;">Limpar</button>
+            </div>
+            <div id="tabmodalResposta" class="col-lg tabmodalRes">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal Info Mandado -->
+  <div class="modal" id="infoMan">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Mandado</h4>
+          <button type="button" class="btn" onclick="cancelInfoMandado();"><i class="fas fa-times"></i></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <table style="width: 100%;">
+            <tr>
+              <td style="width: 80%;">
+                <div style="margin-bottom: 20px;">
+                  <label for="manRegInfo"><b>Registro</b></label>
+                  <div id="manRegInfo"></div>
+                </div>
+              </td>
+              <td style="width: 20%; text-align: right;">
+
+                <img src="../img/info.png" width="50px">
+              </td>
+            </tr>
+          </table>
+          <div style="margin-bottom: 20px;">
+            <label for="manObs"><b>Resumo</b></label>
+            <div id="manObs"></div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="dates">
+                <label for="dataMando"><b>Data</b></label>
+                <div id="dataMando"></div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label for="anoMando"><b>Ano</b></label>
+              <div id="anoMando"></div>
+            </div>
+          </div><br>
+
+          <div style="margin-bottom: 20px;">
+
+            <label for="manRefDoc"><b>Referência Documental</b></label><br>
+            <div id="manRefDoc"></div>
+          </div><br>
+
+          <div style="margin-bottom: 20px;">
+            <label for="destMan"><b>Mandado</b></label>
+            <div id="destMan"></div>
+          </div><br>
+
+          <div style="margin-bottom: 20px;">
+            <label for="destQuemEnv"><b>Nome Quem Envia</b></label><br>
+            <div id="destQuemEnv"></div>
+          </div>
+          <div style="margin-bottom: 20px;">
+            <label for="folioPaginaInfoMan"><b>Fólio/Página</b></label>
+            <div id="folioPaginaInfoMan"></div>
+          </div><br>
+
+          <div style="border: 1px solid #000; padding: 3px;">
+            <h4>Local</h4>
+            <label for="termoPesMan"><b>Termo</b></label>
+            <div id="termoPesMan"></div><br>
+
+            <label for="fregPesMan"><b>Freguesia</b></label>
+            <div id="fregPesMan"></div><br>
+
+            <label for="comaPesMan"><b>Comarca</b></label>
+            <div id="comaPesMan"></div><br>
+
+            <label for="capiPesMan"><b>Capiatania</b></label>
+            <div id="capiPesMan"></div><br>
+          </div>
+
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="goToMan();">Ir Para Mandado</button>
+          <button type="button" class="btn" onclick="cancelInfoMandado();">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal info  -->
+
+  <!-- Modal info Provocação -->
+  <div class="modal" id="infoProv">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Provocação</h4>
+          <button type="button" class="btn" onclick="cancelInfoProvoca();"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <table style="width: 100%;">
+            <tr>
+              <td style="width: 80%;">
+                <div style="margin-bottom: 20px;">
+                  <label for="provRegInfo"><b>Registro</b></label>
+                  <div id="provRegInfo"></div>
+                </div>
+              </td>
+              <td style="width: 20%; text-align: right;">
+
+                <img src="../img/info.png" width="50px">
+              </td>
+            </tr>
+          </table>
+          <div style="margin-bottom: 20px;">
+            <label for="provObsInfo"><b>Resumo</b></label>
+            <div id="provObsInfo"></div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="dates">
+                <label for="datProv"><b>Data</b></label>
+                <div id="datProv"></div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label for="anoProv"><b>Ano</b></label>
+              <div id="anoProv"></div>
+            </div>
+          </div><br>
+
+          <div style="margin-bottom: 20px;">
+
+            <label for="provRefDoc"><b>Referência Documental</b></label><br>
+            <div id="provRefDoc"></div>
+          </div><br>
+
+          <label for="destAut"><b>Destinatário Autoridade Tratamento</b></label>
+          <div id="destAut"></div>
+          <br>
+          <label for="folioPaginaInfoProv"><b>Fólio/Página</b></label>
+          <div id="folioPaginaInfoProv"></div><br>
+
+          <div style="border: 1px solid #000; padding: 3px;">
+            <h4>Local</h4>
+            <label for="termoPesProv"><b>Termo</b></label>
+            <div id="termoPesProv"></div><br>
+
+            <label for="fregPesProv"><b>Freguesia</b></label>
+            <div id="fregPesProv"></div><br>
+
+            <label for="comaPesProv"><b>Comarca</b></label>
+            <div id="comaPesProv"></div><br>
+
+            <label for="capiPesProv"><b>Capiatania</b></label>
+            <div id="capiPesProv"></div><br>
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="goToProv();">Ir para Provocação</button>
+          <button type="button" class="btn" onclick="cancelInfoProvoca();">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal Info  -->
+
+
+
+  <!-- Modal info Consulta -->
+  <div class="modal" id="infoCons">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Consulta</h4>
+          <button type="button" class="btn" onclick="cancelInfoConculta();"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <table style="width: 100%;">
+            <tr>
+              <td style="width: 80%;">
+                <div style="margin-bottom: 20px;">
+                  <label for="consRegInfo"><b>Registro</b></label>
+                  <div id="consRegInfo"></div>
+                </div>
+              </td>
+              <td style="width: 20%; text-align: right;">
+
+                <img src="../img/info.png" width="50px">
+              </td>
+            </tr>
+          </table>
+          <div style="margin-bottom: 20px;">
+            <label for="consObsInfo"><b>Resumo</b></label>
+            <div id="consObsInfo"></div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="dates">
+                <label for="datConsInfo"><b>Data</b></label>
+                <div id="datConsInfo"></div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label for="anoConsInfo"><b>Ano</b></label>
+              <div id="anoConsInfo"></div>
+            </div>
+          </div><br>
+
+          <div style="margin-bottom: 20px;">
+
+            <label for="consRefDocInfo"><b>Referência Documental</b></label><br>
+            <div id="consRefDocInfo"></div>
+          </div><br>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="dates">
+                <label for="parRealInfo"><b>Parecer Real</b></label>
+                <div id="parRealInfo"></div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label for="datParRealInfo"><b>Data Parecer Real</b></label>
+              <div id="datParRealInfo"></div>
+            </div>
+          </div><br>
+
+          <label for="sumulaInfo"><b>Sumula</b></label>
+          <div id="sumulaInfo"></div>
+          <br>
+          <label for="folioPaginaInfoCon"><b>Fólio/Página</b></label>
+          <div id="folioPaginaInfoCon"></div><br>
+
+          <div style="border: 1px solid #000; padding: 3px;">
+            <h4>Local</h4>
+            <label for="termoPesCon"><b>Termo</b></label>
+            <div id="termoPesCon"></div><br>
+
+            <label for="fregPesCon"><b>Freguesia</b></label>
+            <div id="fregPesCon"></div><br>
+
+            <label for="comaPesCon"><b>Comarca</b></label>
+            <div id="comaPesCon"></div><br>
+
+            <label for="capiPesCon"><b>Capiatania</b></label>
+            <div id="capiPesCon"></div><br>
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="goToProv();">Ir para Provocação</button>
+          <button type="button" class="btn" onclick="cancelInfoConculta();">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal Info  -->
+
+  <!-- Modal info Ultramar -->
+  <div class="modal" id="infoUltra">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Ultramar</h4>
+          <button type="button" class="btn" onclick="cancelInfoUltramar();"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <table style="width: 100%;">
+            <tr>
+              <td style="width: 80%;">
+                <div style="margin-bottom: 20px;">
+                  <label for="ultRegInfo"><b>Registro</b></label>
+                  <div id="ultRegInfo"></div>
+                </div>
+              </td>
+              <td style="width: 20%; text-align: right;">
+
+                <img src="../img/info.png" width="50px">
+              </td>
+            </tr>
+          </table>
+          <div style="margin-bottom: 20px;">
+            <label for="ultObsInfo"><b>Resumo</b></label>
+            <div id="ultObsInfo"></div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="dates">
+                <label for="datUltInfo"><b>Data</b></label>
+                <div id="datUltInfo"></div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label for="anoUltInfo"><b>Ano</b></label>
+              <div id="anoUltInfo"></div>
+            </div>
+          </div><br>
+
+          <div style="margin-bottom: 20px;">
+
+            <label for="ultRefDoc"><b>Referência Documental</b></label><br>
+            <div id="ultRefDoc"></div>
+          </div><br>
+
+          <label for="autUltInfo"><b>Autoridade</b></label>
+          <div id="autUltInfo"></div>
+          <br>
+          <label for="folioPaginaInfoUltra"><b>Fólio/Página</b></label>
+          <div id="folioPaginaInfoUltra"></div><br>
+
+          <div style="border: 1px solid #000; padding: 3px;">
+            <h4>Local</h4>
+            <label for="termoPesUltra"><b>Termo</b></label>
+            <div id="termoPesUltra"></div><br>
+
+            <label for="fregPesUltra"><b>Freguesia</b></label>
+            <div id="fregPesUltra"></div><br>
+
+            <label for="comaPesUltra"><b>Comarca</b></label>
+            <div id="comaPesUltra"></div><br>
+
+            <label for="capiPesUltra"><b>Capiatania</b></label>
+            <div id="capiPesUltra"></div><br>
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="goToUlt();">Ir para Ultramar</button>
+          <button type="button" class="btn" onclick="cancelInfoUltramar();">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal Info  -->
+
+  <!-- Modal info Resposta -->
+  <div class="modal" id="infoRes">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Resposta</h4>
+          <button type="button" class="btn" onclick="cancelInfoResposta();"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <table style="width: 100%;">
+            <tr>
+              <td style="width: 80%;">
+                <div style="margin-bottom: 20px;">
+                  <label for="resRegInfo"><b>Registro</b></label>
+                  <div id="resRegInfo"></div>
+                </div>
+              </td>
+              <td style="width: 20%; text-align: right;">
+
+                <img src="../img/info.png" width="50px">
+              </td>
+            </tr>
+          </table>
+          <div style="margin-bottom: 20px;">
+            <label for="resObsInfo"><b>Resumo</b></label>
+            <div id="resObsInfo"></div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="dates">
+                <label for="datResInfo"><b>Data</b></label>
+                <div id="datResInfo"></div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label for="anoResInfo"><b>Ano</b></label>
+              <div id="anoResInfo"></div>
+            </div>
+          </div><br>
+
+          <div style="margin-bottom: 20px;">
+
+            <label for="resRefDocInfo"><b>Referência Documental</b></label>
+            <div id="resRefDocInfo"></div>
+          </div><br>
+          <!-- Topologia diplomática -->
+
+          <label for="tipoDiploInfo"><b>Tipologia Diplomática</b></label>
+          <div id="tipoDiploInfo"></div><br>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <label for="novaOrdInfo"><b>Nova Ordem</b></label>
+              <div id="novaOrdInfo"></div>
+            </div>
+            <div class="col-sm-6">
+              <label for="impressosInfo"><b>Impressos</b></label>
+              <div id="impressosInfo"></div>
+            </div>
+          </div>
+          <br>
+          <label for="folioPaginaInfoRes"><b>Fólio/Página</b></label>
+          <div id="folioPaginaInfoRes"></div><br>
+
+          <div style="border: 1px solid #000; padding: 3px;">
+            <h4>Local</h4>
+            <label for="termoPesRes"><b>Termo</b></label>
+            <div id="termoPesRes"></div><br>
+
+            <label for="fregPesRes"><b>Freguesia</b></label>
+            <div id="fregPesRes"></div><br>
+
+            <label for="comaPesRes"><b>Comarca</b></label>
+            <div id="comaPesRes"></div><br>
+
+            <label for="capiPesRes"><b>Capiatania</b></label>
+            <div id="capiPesRes"></div><br>
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="goToRes();">Ir para Resposta</button>
+          <button type="button" class="btn" onclick="cancelInfoResposta();">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal Info  -->
+
+
+  <!-- Modal info Pessoa -->
+  <div class="modal" id="infoPes">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Pessoa</h4>
+          <button type="button" class="btn" onclick="cancelarInfoPessoa();"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <table style="width: 100%;">
+            <tr>
+              <td style="width: 80%;">
+                <div style="margin-bottom: 20px;">
+                  <label for="nomePes"><b>Nome</b></label>
+                  <div id="nomePes"></div>
+                </div>
+              </td>
+              <td style="width: 20%; text-align: right;">
+
+                <img src="../img/info.png" width="50px">
+              </td>
+            </tr>
+          </table>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="dates">
+                <label for="idadePes"><b>Data Nascimento</b></label>
+                <div id="idadePes"></div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label for="sexoPes"><b>Sexo</b></label>
+              <div id="sexoPes"></div>
+            </div>
+          </div><br>
+
+          <div style="margin-bottom: 20px;">
+
+            <label for="filPes"><b>Filiação</b></label>
+            <div id="filPes"></div>
+          </div><br>
+
+          <label for="infoOfiTitulo"><b>Ofício/Título:</b></label>
+          <div id="infoOfiTitulo"></div><br>
+
+          <label for="infoMarEco"><b>Marcador económico (Ocupação):</b></label>
+          <div id="infoMarEco"></div><br>
+
+          <label for="marSocJur"><b>Sócio Juridico:</b></label>
+          <div id="infoSocJuridico"></div><br>
+
+          <div style="border: 1px solid #000; padding: 3px;">
+            <h4>Local</h4>
+            <label for="termoPes"><b>Termo</b></label>
+            <div id="termoPes"></div><br>
+
+            <label for="fregPes"><b>Freguesia</b></label>
+            <div id="fregPes"></div><br>
+
+            <label for="comaPes"><b>Comarca</b></label>
+            <div id="comaPes"></div><br>
+
+            <label for="capiPes"><b>Capiatania</b></label>
+            <div id="capiPes"></div><br>
+          </div>
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" onclick="cancelarInfoPessoa();">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal Info  -->
+
+
+  <!-- Modal criar Pessoa -->
+  <div class="modal" id="criarPes">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Criar Pessoa</h4>
+          <button type="button" class="btn" onclick="cancelarCriaPessoa();"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <table style="width: 100%;">
+            <tr>
+              <td style="width: 80%;">
+                <div style="margin-bottom: 20px;">
+                  <label for="addNomePes"><b>Nome</b></label>
+                  <input type="text" class="form-control" id="addNomePes" placeholder="Nome">
+                </div>
+              </td>
+              <td style="width: 20%; text-align: right;">
+
+                <img src="../img/addPessoa.png" width="50px">
+              </td>
+            </tr>
+          </table>
+          <div class="row">
+            <div class="col-sm-6">
+              <label for="addIdadePes"><b>Data Nascimento</b></label>
+              <input type="text" class="form-control" id="addIdadePes" placeholder="Data Nascimento"
+                style="max-width: 100px;">
+            </div>
+            <div class="col-sm-6">
+              <label for="addSexoPes"><b>Sexo</b></label>
+              <select class="form-control" id="addSexoPes" name="addSexoPes" placeholder="Comarca"
+                style="max-width: 100px;">
+                <option value="-1">&nbsp;</option>
+                <option value="M">M</option>
+                <option value="F">F</option>
+                <option value="F/M">F/M</option>
+              </select>
+            </div>
+          </div><br>
+
+          <div style="margin-bottom: 20px;">
+
+            <label for="addFilPes"><b>Filiação</b></label>
+            <textarea id="addFilPes" class="md-textarea form-control" rows="3"></textarea>
+          </div><br>
+
+          <div id="addOfiTitulo"></div><br>
+
+          <div id="addMarEco"></div><br>
+
+          <div id="addSocJuridico"></div><br>
+
+          <div style="border: 1px solid #000; padding: 3px;">
+            <h4>Local</h4>
+            <label for="termoPesCriar">Termo</label>
+            <div class="form-floating input-group">
+              <input type="text" class="form-control" name="termoPesCriar" id="termoPesCriar" placeholder="Termo"
+                disabled>
+              <div class="input-group-append">
+                <span class="fa fa-list input-group-text ref_doc" type="button" onclick="openTermoPes();">
+                </span>
+                <span class="fa fa-broom btn btn-danger input-group-text ref_doc" type="button" data-toggle="modal"
+                  onclick="limpaTermo()">
+                </span>
+              </div>
+            </div>
+            <input type="hidden" id="termoPesAddValue">
+            <label for="fregPesCriar">Freguesia</label>
+            <div class="form-floating input-group">
+              <input type="text" class="form-control" name="fregPesCriar" id="fregPesCriar" placeholder="Freguesia"
+                disabled>
+              <div class="input-group-append">
+                <span class="fa fa-list input-group-text ref_doc" type="button" onclick="openFregPes();">
+                </span>
+                <span class="fa fa-broom btn btn-danger input-group-text ref_doc" type="button" data-toggle="modal"
+                  onclick="limpaFreg()">
+                </span>
+              </div>
+            </div>
+            <input type="hidden" id="fregPesAddValue">
+            <label for="comaPesCriar">Comarca</label>
+            <div class="form-floating input-group">
+              <input type="text" class="form-control" name="comaPesCriar" id="comaPesCriar" placeholder="Comarca"
+                disabled>
+              <div class="input-group-append">
+                <span class="fa fa-list input-group-text ref_doc" type="button" onclick="openComaPes();">
+                </span>
+                <span class="fa fa-broom btn btn-danger input-group-text ref_doc" type="button" data-toggle="modal"
+                  onclick="limpaComa()">
+                </span>
+              </div>
+            </div>
+            <input type="hidden" id="comaPesAddValue">
+            <label for="capiPesCriar">Capitania</label>
+            <div class="form-floating input-group">
+              <input type="text" class="form-control" name="capiPesCriar" id="capiPesCriar" placeholder="Capitania"
+                disabled>
+              <div class="input-group-append">
+                <span class="fa fa-list input-group-text ref_doc" type="button" onclick="openCapiPes();">
+                </span>
+                <span class="fa fa-broom btn btn-danger input-group-text ref_doc" type="button" data-toggle="modal"
+                  onclick="limpaCapi()">
+                </span>
+              </div>
+            </div>
+            <input type="hidden" id="capiPesAddValue">
+          </div>
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="addPessoa();">Adicionar Pessoa</button>
+          <button type="button" class="btn" onclick="cancelarCriaPessoa();">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal Criar Pessoa  -->
+
+  <!--************************ XPTO ************************-->
+  <div class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title"></h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ************************ Ofício/Título ************************ -->
+  <div class="modal" id="modalOfiTitulo">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Ofício/Titulo</h4>
+          <button type="button" class="btn" onclick="cancelarOfiTitulo();"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procOfiTitulo" placeholder="Procurar"
+            aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectOfiTitulo(document.getElementById('procOfiTitulo').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalOfiTitulo" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="cancelarOfiTitulo();">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal XPTO -->
+  <div class="modal" id="xpto2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ************************ Marcador Económico ************************ -->
+  <div class="modal" id="modalMarEco">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Marcador Económico (Ocupação)</h4>
+          <button type="button" class="btn" onclick="cancelarMarEco();"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procMarEco" placeholder="Procurar"
+            aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectMarEco(document.getElementById('procMarEco').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalMarEco" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="cancelarMarEco();">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal XPTO -->
+  <div class="modal" id="xpto2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ************************ Marcador Socio Juridico ************************ -->
+  <div class="modal" id="modalSocJuridico">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Marcador Sócio Juridico</h4>
+          <button type="button" class="btn" onclick="cancelarSocJuridico();"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procSocJuridico" placeholder="Procurar"
+            aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectSocJuridico(document.getElementById('procSocJuridico').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalSocJuridico" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="cancelarSocJuridico();">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  
+<!-- Modal XPTO -->
+<div class="modal" id="xpto2">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- ************************ Local ************************ -->
+<!-- ************************ Freguesia ************************ -->
+<div class="modal" id="modalFregPes">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Freguesia</h4>
+        <button type="button" class="btn" onclick="cancelarFregPes();"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="d-flex" style="margin: 10px;">
+        <input class="form-control me-2" type="search" id="procFreguesiaPes" placeholder="Procurar"
+          aria-label="Procurar">
+        <button class="btn btn-outline-success"
+          onclick="selectFreguesiaPes(document.getElementById('procFreguesiaPes').value);">Procurar</button>
+      </div>
+      <!-- Modal body -->
+      <div id="tabmodalFreguesiaPes" class="modal-body">
+
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" onclick="cancelarFregPes();">Fechar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal XPTO -->
+<div class="modal" id="xpto2">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!--  Fim Modal xpto  -->
+<!-- ************************ Termo ************************ -->
+<div class="modal" id="modalTermoPes">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Termo</h4>
+        <button type="button" class="btn" onclick="cancelarTermoPes();"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="d-flex" style="margin: 10px;">
+        <input class="form-control me-2" type="search" id="procTermoPes" placeholder="Procurar" aria-label="Procurar">
+        <button class="btn btn-outline-success"
+          onclick="selectTermoPes(document.getElementById('procTermoPes').value);">Procurar</button>
+      </div>
+      <!-- Modal body -->
+      <div id="tabmodalTermoPes" class="modal-body">
+
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" onclick="cancelarTermoPes();">Fechar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal XPTO -->
+<div class="modal" id="xpto2">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!--  Fim Modal xpto  -->
+<!-- ************************ Comarca ************************ -->
+<div class="modal" id="modalComaPes">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Comarca</h4>
+        <button type="button" class="btn" onclick="cancelarComaPes();"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="d-flex" style="margin: 10px;">
+        <input class="form-control me-2" type="search" id="procComarcaPes" placeholder="Procurar" aria-label="Procurar">
+        <button class="btn btn-outline-success"
+          onclick="selectComarcaPes(document.getElementById('procComarcaPes').value);">Procurar</button>
+      </div>
+      <!-- Modal body -->
+      <div id="tabmodalComarcaPes" class="modal-body">
+
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" onclick="cancelarComaPes();">Fechar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal XPTO -->
+<div class="modal" id="xpto2">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!--  Fim Modal xpto  -->
+<!-- ************************ Capitania ************************ -->
+<div class="modal" id="modalCapiPes">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Capitania</h4>
+        <button type="button" class="btn" onclick="cancelarCapiPes();"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="d-flex" style="margin: 10px;">
+        <input class="form-control me-2" type="search" id="procCapitaniaPes" placeholder="Procurar"
+          aria-label="Procurar">
+        <button class="btn btn-outline-success"
+          onclick="selectCapitaniaPes(document.getElementById('procCapitaniaPes').value);">Procurar</button>
+      </div>
+      <!-- Modal body -->
+      <div id="tabmodalCapitaniaPes" class="modal-body">
+
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" onclick="cancelarCapiPes();">Fechar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+<script>
+  showMenu();
+  getConsulta(v_idCons);
+  listRefDoc();
+  // Formata a data 
+  $('.datepicker').datepicker({
+    format: 'dd/mm/yyyy',
+    startDate: '01/01/1720',
+    endDate: '31/12/1819',
+  }).attr('readonly', 'readonly').on('changeDate', function (e) {
+    $(this).datepicker('hide');
+  });
+</script>
+
+</html>

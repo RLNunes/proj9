@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Circuitos Oceânicos</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+      integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+      crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/all.css" />
+    <!-- Include Bootstrap Datepicker -->
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+  
+    <script src="./js/sweetalert2.all.min.js"></script>
+  
+  
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="./js/menu.js"></script>
+
+
+    <script>
+        async function showMenu() {
+            document.getElementById("menu").innerHTML = await getMenuAdmin('home');
+        }
+    </script>
+</head>
+
+<body>
+    <div id="menu"></div>
+    <div id="body"></div>
+    <script>
+        showMenu();
+    </script>
+    <h1 style="margin-left: 30px;">Administração</h1>
+    <p style="text-align: justify; margin: 40px; font-size: large;">
+      &nbsp;&nbsp;&nbsp;&nbsp;A Base de Dados “Circuitos Oceânicos” tem por finalidade o mapeamento das demandas enviadas da 
+      América portuguesa ao Reino de Portugal, bem como dos seus caminhos institucionais (trâmites) e 
+      das respostas e ordens provocadas a partir delas em ambos os lados do Atlântico, entre os anos de 
+      1736 a 1807. Foi desenvolvida a partir da documentação do Conselho Ultramarino e da Secretária de 
+      Estado da Marinha e do Ultramar, sob a guarda do Arquivo Ultramarino de Lisboa (AHU) e, em grande 
+      parte, disponibilizada online pelo Projeto Resgate (BNDigital). Ele é fruto de um projeto coletivo 
+      entre pesquisadoras da área de História e de Dados, coordenado por Andréa Slemian (UNIFESP), 
+      Renata Silva Fernandes (UFG, Goiás), Roberta Stumpf (Universidade Autónoma de Lisboa, UAL) e 
+      Valéria Pequeno (Escola Superior Náutica Infante D. Henrique, Lisboa). Trata-se de um projeto 
+      em andamento que, até o momento, trabalha com dados das capitanias de <b>Minas Gerais, São Paulo, 
+      Goiás e Mato Grosso</b>. A aplicação Web está sendo desenvolvida por Paulo Ricardo Rodrigues Bastos (mestrando na UAL) 
+      sob a orientação de Laércio Cruvinel (UAL, Lisboa). O projeto possui financiamento da FAPESP (processo número <b>2021/09104-0</b>).
+    </p>
+</body>
+
+</html>

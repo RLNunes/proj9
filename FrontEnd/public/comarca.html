@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Circuitos Oceânicos</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+    integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/all.css" />
+  <!-- Include Bootstrap Datepicker -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+
+  <script src="./js/sweetalert2.all.min.js"></script>
+
+
+  <link rel="stylesheet" href="./css/style.css" />
+
+  <script src="./js/menu.js"></script>
+  <script src="./js/comarca.js"></script>
+
+  <script>
+    async function showMenu() {
+      document.getElementById("menu").innerHTML = await getMenuAdmin('comarca', 1);
+    }
+
+    function criar() {
+      document.getElementById("comarcaAdd").value ='';
+      document.getElementById("2Comarca").value ='';
+      document.getElementById("comarca2Value").value ='';
+      $('#criarComarca').modal('show');
+      document.getElementById("btnSave").style.display = 'none';
+      document.getElementById("btnCriar").style.display = 'block';
+      document.getElementById("btnDel").style.display = 'none';
+      selectComarca2();
+    }
+    function limpaComarca2(){
+      document.getElementById('2Comarca').value='';
+      document.getElementById('comarca2Value').value='';
+    }
+
+  </script>
+</head>
+
+<body>
+  <div id="menu"></div>
+  <br>
+  <div id="body" style="margin: 2px;">
+    <div id="titulo" width="100%" style="border: 1px solid #000; "align="center"><h1>Comarca</h1></div><br>
+    <button type="button" class="btn btn-primary" onclick="criar();">
+      Comarca
+    </button>
+    <div id="TableComarca"></div>
+
+  </div>
+
+  <!-- Modal Criar Comarca -->
+  <div class="modal" id="criarComarca">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Comarca</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Modal body -->
+
+
+        <div class="modal-body">
+
+          <label for="comarcaAdd">Nome</label>
+          <input type="hidden" id="comarcaId">
+          <input type="text" id="comarcaAdd" class="md-textarea form-control" rows="1">
+          <br>
+          <label for="2Comarca">2ª Comarca</label>
+          <div class="form-floating input-group">
+            <input type="text" class="form-control" id="2Comarca" placeholder="2ª Comarca" disabled>
+            <div class="input-group-append">
+              <span class="fa fa-list input-group-text ref_doc" type="button" data-toggle="modal"
+                data-target="#modalComarca2">
+              </span>
+              <span class="fa fa-broom btn btn-danger input-group-text ref_doc" type="button" data-toggle="modal"
+              onclick="limpaComarca2()">
+            </span>
+            </div>
+          </div>
+          <input type="hidden" id="comarca2Value">
+
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" data-dismiss="modal">Cancelar</button>
+          <button type="button" id="btnCriar" class="btn btn-primary" onclick="addComarca();"
+            style="display: block;">Criar</button>
+          <button type="button" id="btnSave" class="btn btn-primary" onclick="saveComarca();"
+            style="display: none;">Alterar</button>
+            <button type="button" id="btnDel" class="btn btn-danger" onclick="delComarca();"
+              style="display: block;">Eliminar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal Criar  -->
+
+  <!--************************ 2º Comarca ************************-->
+  <div class="modal" id="modalComarca2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Comarca</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procComarca" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectComarca2(document.getElementById('procComarca').value);">Procurar</button>
+        </div>
+
+        <!-- Modal body -->
+        <div id="tabComarca2" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal 2ª Comarca  -->
+
+
+  <script>
+    showMenu();
+    getAllComarcas(1,10);
+    var input = document.getElementById("VSearch");
+    input.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        search(document.getElementById("VSearch").value);
+      }
+    });
+
+    // Formata a data 
+    $('.datepicker').datepicker({
+      format: 'dd/mm/yyyy',
+      startDate: '01/01/1720',
+      endDate: '31/12/1819',
+    }).attr('readonly', 'readonly').on('changeDate', function (e) {
+      $(this).datepicker('hide');
+    });
+  </script>
+
+</body>
+
+</html>

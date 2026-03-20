@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Circuitos Oceânicos</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+    integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/all.css" />
+  <!-- Include Bootstrap Datepicker -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+
+  <script src="./js/sweetalert2.all.min.js"></script>
+
+
+  <link rel="stylesheet" href="./css/style.css" />
+
+  <script src="./js/menu.js"></script>
+  <script src="./js/pessoa.js"></script>
+
+  <script>
+    async function showMenu() {
+      document.getElementById("menu").innerHTML = await getMenuAdmin('pessoa', 1);
+    }
+
+    function criar() {
+
+      sessionStorage.setItem("v_idPessoa", 0);
+
+      $('#criarPessoa').modal('show');
+      document.getElementById("btnSave").style.display = 'none';
+      document.getElementById("btnDel").style.display = 'none';
+      document.getElementById("btnCriar").style.display = 'block';
+      document.getElementById("addNomePes").value = '';
+      document.getElementById("addIdadePes").value = '';
+      document.getElementById("addSexoPes").value = '';
+      document.getElementById("addFilPes").value = '';
+      // getAllMarEco(0);
+      let tableMarEco = '<div class="row" ><div class="column listTabNome" align="left"><label for="tableMarEco" ><b>Marcador economico (Ocupação):</b></label>' +
+        '</div><div class="column listTabBotao" align="right"><a href="javascript:selectMarEcoAdd(`all`)"><img src="../img/addLine.png" width="35"></a> ' +
+        '<a href="javascript:delMarEcoAdd()"><img src="../img/delList.png" width="35"></a></div></div>' +
+        '<table id="tableMarEcoSel" class="listPopUp"></table>';
+      document.getElementById("addMarEco").innerHTML = tableMarEco;
+      let tableSocJuridico = '<div class="row" ><div class="column listTabNome" align="left"><label for="tableSocJuridico" ><b>Sócio Juridico:</b></label>' +
+        '</div><div class="column listTabBotao" align="right"><a href="javascript:selectSocJuridicoAdd(`all`)"><img src="../img/addLine.png" width="35"></a> ' +
+        '<a href="javascript:delSocJuridicoAdd()"><img src="../img/delList.png" width="35"></a></div></div>' +
+        '<table id="tableSocJuridicoSel" class="listPopUp"></table>';
+      document.getElementById("addSocJuridico").innerHTML = tableSocJuridico;
+
+      let tableOfiTitulo = '<div class="row" ><div class="column listTabNome" align="left"><label for="tableOfiTitulo" ><b>Ofício/Titulo:</b></label>' +
+        '</div><div class="column listTabBotao" align="right"><a href="javascript:selectOfiTituloAdd(`all`)"><img src="../img/addLine.png" width="35"></a> ' +
+        '<a href="javascript:delOfiTituloAdd()"><img src="../img/delList.png" width="35"></a></div></div>' +
+        '<table id="tableOfiTituloSel" class="listPopUp"></table>';
+      document.getElementById("addOfiTitulo").innerHTML = tableOfiTitulo;
+
+      selectTermo();
+      document.getElementById("termoPes").value = "";
+      document.getElementById("termoPesValue").value = "";
+      selectFreguesia();
+      document.getElementById("fregPes").value = "";
+      document.getElementById("fregPesValue").value = "";
+      selectComarca();
+      document.getElementById("comaPes").value = "";
+      document.getElementById("comaPesValue").value = "";
+      selectCapitania();
+      document.getElementById("capiPes").value = "";
+      document.getElementById("capiPesValue").value = "";
+    }
+
+    function limpaTermo() {
+      document.getElementById("termoPes").value = "";
+      document.getElementById("termoPesValue").value = "";
+    }
+
+    function limpaFreg() {
+      document.getElementById("fregPes").value = "";
+      document.getElementById("fregPesValue").value = "";
+    }
+
+    function limpaComa() {
+      document.getElementById("comaPes").value = "";
+      document.getElementById("comaPesValue").value = "";
+    }
+
+    function limpaCapi() {
+      document.getElementById("capiPes").value = "";
+      document.getElementById("capiPesValue").value = "";
+    }
+
+  </script>
+</head>
+
+<body>
+  <div id="menu"></div>
+  <br>
+  <div id="body" style="margin: 2px;">
+    <div id="titulo" width="100%" style="border: 1px solid #000; "align="center"><h1>Pessoa</h1></div><br>
+    <button type="button" class="btn btn-primary" onclick="criar();">
+      Pessoa
+    </button>
+    <div id="TablePessoa"></div>
+
+  </div>
+
+
+
+  <!-- Modal criar Pessoa -->
+  <div class="modal" id="criarPessoa">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Criar Pessoa</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <input type="hidden" id="pessoaId">
+          <table style="width: 100%;">
+            <tr>
+              <td style="width: 80%;">
+                <div style="margin-bottom: 20px;">
+                  <label for="addNomePes"><b>Nome</b></label>
+                  <input type="text" class="form-control" id="addNomePes" placeholder="Nome">
+                </div>
+              </td>
+              <td style="width: 20%; text-align: right;">
+
+                <img src="../img/addPessoa.png" width="50px">
+              </td>
+            </tr>
+          </table>
+          <div class="row">
+            <div class="col-sm-6">
+              <label for="addIdadePes"><b>Ano Nascimento</b></label>
+              <input type="text" class="form-control" id="addIdadePes" placeholder="Ano Nascimento"
+                style="max-width: 100px;">
+            </div>
+            <div class="col-sm-6">
+              <label for="addSexoPes"><b>Sexo</b></label>
+              <select class="form-control" id="addSexoPes" name="addSexoPes" placeholder="Comarca"
+                style="max-width: 100px;">
+                <option value="-1">&nbsp;</option>
+                <option value="M">M</option>
+                <option value="F">F</option>
+                <option value="F/M">F/M</option>
+              </select>
+            </div>
+          </div><br>
+
+          <div>
+            <div style="margin-bottom: 20px;">
+
+              <label for="addFilPes"><b>Filiação</b></label>
+              <textarea id="addFilPes" class="md-textarea form-control" rows="3"></textarea>
+            </div><br>
+
+            <div id="addOfiTitulo"></div><br>
+
+            <div id="addMarEco"></div><br>
+
+            <div id="addSocJuridico"></div><br>
+
+            <div style="border: 1px solid #000; padding: 3px;">
+              <h4>Local</h4>
+              <label for="termoPes">Termo</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control" name="termoPes" id="termoPes" placeholder="Termo" disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text ref_doc" type="button"  onclick="openTermoPes();">
+                  </span>
+                  <span class="fa fa-broom btn btn-danger input-group-text ref_doc" type="button" data-toggle="modal"
+                    onclick="limpaTermo()">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="termoPesValue">
+              <label for="fregPes">Freguesia</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control" name="fregPes" id="fregPes" placeholder="Freguesia" disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text ref_doc" type="button" onclick="openFregPes();">
+                  </span>
+                  <span class="fa fa-broom btn btn-danger input-group-text ref_doc" type="button" data-toggle="modal"
+                    onclick="limpaFreg()">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="fregPesValue">
+              <label for="comaPes">Comarca</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control" name="comaPes" id="comaPes" placeholder="Comarca" disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text ref_doc" type="button" onclick="openComaPes();">
+                  </span>
+                  <span class="fa fa-broom btn btn-danger input-group-text ref_doc" type="button" data-toggle="modal"
+                    onclick="limpaComa()">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="comaPesValue">
+              <label for="capiPes">Capitania</label>
+              <div class="form-floating input-group">
+                <input type="text" class="form-control" name="capiPes" id="capiPes" placeholder="Capitania" disabled>
+                <div class="input-group-append">
+                  <span class="fa fa-list input-group-text ref_doc" type="button" onclick="openCapiPes();">
+                  </span>
+                  <span class="fa fa-broom btn btn-danger input-group-text ref_doc" type="button" data-toggle="modal"
+                    onclick="limpaCapi()">
+                  </span>
+                </div>
+              </div>
+              <input type="hidden" id="capiPesValue">
+            </div>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-info" data-dismiss="modal">Cancelar</button>
+            <button type="button" id="btnCriar" class="btn btn-primary" onclick="addPessoa();"
+              style="display: block;">Criar</button>
+            <button type="button" id="btnSave" class="btn btn-primary" onclick="savePessoa ();"
+              style="display: none;">Alterar</button>
+            <button type="button" id="btnDel" class="btn btn-danger" onclick="delPessoa();"
+              style="display: block;">Eliminar</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal Criar Pessoa  -->
+
+  <!-- ************************ Marcador Económico ************************ -->
+  <div class="modal" id="modalMarEco">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Marcador economico (Ocupação)</h4>
+          <button type="button" class="btn" onclick="cancelarMarEco();"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procMarEco" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectMarEco( sessionStorage.getItem('v_idPessoa'),document.getElementById('procMarEco').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalMarEco" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="cancelarMarEco();">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal XPTO -->
+  <div class="modal" id="xpto2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal xpto  -->
+
+  <!-- ************************ Marcador Socio Juridico ************************ -->
+  <div class="modal" id="modalSocJuridico">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Marcador Sócio Juridico</h4>
+          <button type="button" class="btn" onclick="cancelarSocJuridico();"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procSocJuridico" placeholder="Procurar"
+            aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectSocJuridico(sessionStorage.getItem('v_idPessoa'),document.getElementById('procSocJuridico').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalSocJuridico" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="cancelarSocJuridico();">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal XPTO -->
+  <div class="modal" id="xpto2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal xpto  -->
+
+  <!-- ************************ Marcador Oficio Titulo ************************ -->
+  <div class="modal" id="modalOfiTitulo">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Ofício/Título</h4>
+          <button type="button" class="btn" onclick="cancelarOfiTitulo();"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procOfiTitulo" placeholder="Procurar"
+            aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectOfiTitulo(sessionStorage.getItem('v_idPessoa'),document.getElementById('procOfiTitulo').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalOfiTitulo" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="cancelarOfiTitulo();">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal XPTO -->
+  <div class="modal" id="xpto2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal xpto  -->
+  <!-- ************************ Local ************************ -->
+  <!-- ************************ Freguesia ************************ -->
+  <div class="modal" id="modalFreg">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Freguesia</h4>
+          <button type="button" class="btn" onclick="cancelarFregPes();"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procFreguesia" placeholder="Procurar"
+            aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectFreguesia(document.getElementById('procFreguesia').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalFreguesia" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="cancelarFregPes();">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal XPTO -->
+  <div class="modal" id="xpto2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal xpto  -->
+  <!-- ************************ Termo ************************ -->
+  <div class="modal" id="modalTermo">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Termo</h4>
+          <button type="button" class="btn" onclick="cancelarTermoPes();"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procTermo" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectTermo(document.getElementById('procTermo').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalTermo" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="cancelarTermoPes();">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal XPTO -->
+  <div class="modal" id="xpto2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal xpto  -->
+  <!-- ************************ Comarca ************************ -->
+  <div class="modal" id="modalComa">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Comarca</h4>
+          <button type="button" class="btn" onclick="cancelarComaPes();"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procComarca" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectComarca(document.getElementById('procComarca').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalComarca" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="cancelarComaPes();">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal XPTO -->
+  <div class="modal" id="xpto2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal xpto  -->
+  <!-- ************************ Capitania ************************ -->
+  <div class="modal" id="modalCapi">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Capitania</h4>
+          <button type="button" class="btn" onclick="cancelarCapiPes();"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procCapitania" placeholder="Procurar"
+            aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="selectCapitania(document.getElementById('procCapitania').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabmodalCapitania" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="cancelarCapiPes();">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <script>
+    showMenu();
+    getAllPessoas(1, 10);
+
+    // Formata a data 
+    $('.datepicker').datepicker({
+      format: 'dd/mm/yyyy',
+      startDate: '01/01/1720',
+      endDate: '31/12/1819',
+    }).attr('readonly', 'readonly').on('changeDate', function (e) {
+      $(this).datepicker('hide');
+    });
+  </script>
+
+</body>
+
+</html>

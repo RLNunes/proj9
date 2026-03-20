@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Circuitos Oceânicos</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+    integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/all.css" />
+  <!-- Include Bootstrap Datepicker -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+
+  <script src="./js/sweetalert2.all.min.js"></script>
+
+
+  <link rel="stylesheet" href="./css/style.css" />
+
+  <script src="./js/menu.js"></script>
+  <script src="./js/respostas.js"></script>
+
+  <script>
+    async function showMenu() {
+      document.getElementById("menu").innerHTML = await getMenu('res', 1);
+    }
+
+    function criar() {
+      $('#criarResp').modal('show');
+      listRegistroAdd(0, '');
+      listRefDoc();
+      // getAllTipoDiplo();
+    }
+
+    function limpaRefDoc() {
+      document.getElementById("ref_doc").value = "";
+      document.getElementById("ref_docValue").value = "";
+    }
+
+
+  </script>
+</head>
+
+<body>
+  <div id="menu"></div>
+  <br>
+  <div id="body" style="margin: 2px;">
+    <div id="titulo" width="100%" style="border: 1px solid #000; "align="center"><h1>Resposta</h1></div>
+    <div id="filtro" width="100%" style=" border-bottom: 1px solid #000;  padding-bottom: 10px; color:gray;"
+      align="center">
+      <div width="100%">
+        <h3>Filtro</h3>
+      </div>
+      <div class="row" style="display: ruby;">
+        <div class="col-sm-3" style="size: 30%;">
+          <input type="text" class="form-control" id="filPes" placeholder="Pessoa">
+        </div>
+        <div id="filTema" class="col-sm-3" style="size: 30%;"></div>
+        <div id="filPalCha" class="col-sm-3" style="size: 30%;"></div>
+        <button type="button" class="btn btn-outline-success" onclick="filtrar(document.getElementById('VSearch').value);" id="btnFiltro">Filtrar</button>
+        <button type="button" class="btn btn-outline-dark" onclick="limpaFiltro(document.getElementById('VSearch').value);" id="btnLimpFiltro">Limpar</button>
+      </div>
+    </div><br>
+    <button type="button" class="btn btn-primary" onclick="criar();">
+      Criar Resposta
+    </button>
+    <div id="TableResposta"></div>
+
+  </div>
+  <!-- Modal Criar Resposta -->
+  <div class="modal" id="criarResp">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Resposta</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Modal body -->
+
+
+        <div class="modal-body">
+          <div style="margin-bottom: 20px;">
+            <label for="resObs">Resumo</label>
+            <textarea id="resObs" class="md-textarea form-control" rows="3"></textarea>
+          </div>
+          <label for="registroAdd">Registro</label>
+          <div class="form-floating input-group">
+            <input type="text" class="form-control lovPopUp" id="registroAdd" placeholder="Registro" disabled>
+            <div class="input-group-append">
+              <span class="fa fa-list input-group-text registroAdd" type="button" onclick="openRegistro();">
+              </span>
+            </div>
+          </div>
+          <input type="hidden" id="registroAddValue">
+          <div class="row" style="margin-top: 30px;">
+            <div class="col-sm-5">
+              <!-- Date Picker Data Resposta  -->
+              <div class="dates">
+                <div class="start_date input-group mb-4">
+                  <input class="form-control datepicker" type="text" placeholder="Data" id="datResp"
+                    onchange="getAno(this.value);">
+                  <div class="input-group-append">
+                    <span class="fa fa-calendar fa-2xs input-group-text datResp" aria-hidden="true "></span>
+                  </div>
+                </div>
+                <!-- Fim datePicker Data Resposta -->
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-floating" style="margin-top: 10px;">
+                <input type="text" class="form-control" id="anoResp" placeholder="Ano">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-floating" style="margin-top:0px; margin-left:20px; margin-right: 0px; width: 100%;">
+                <input type="checkbox" id="anoAnt" name="anoAnt" value="A">
+                <label for="anoAnt" style="font-size: 15px;">Anterior</label><br>
+                <input type="checkbox" id="anoPos" name="anoPos" value="Y">
+                <label for="anoPos" style="font-size: 15px;">Posterior</label>
+              </div>
+            </div>
+          </div><br>
+          <label for="ref_doc">Referência Documental</label>
+          <div class="form-floating input-group" style="width: 90%;">
+            <input type="text" class="form-control" id="ref_doc" placeholder="Referência Documental" disabled>
+            <div class="input-group-append">
+              <span class="fa fa-list input-group-text ref_doc" type="button" onclick="openRefDoc();">
+              </span>
+              <span class="fa fa-broom btn btn-danger input-group-text ref_doc" type="button" data-toggle="modal"
+                onclick="limpaRefDoc()">
+              </span>
+            </div>
+          </div>
+          <input type="hidden" id="ref_docValue"><br>
+          <!-- Topologia diplomática -->
+          <div id="tipoDiplo" class="form-floating input-group">
+          </div>
+          <label for="novaOrd">Nova Ordem</label>
+          <textarea id="novaOrd" class="md-textarea form-control" rows="1"></textarea>
+
+          <label for="impressos">Impressos</label>
+          <textarea id="impressos" class="md-textarea form-control" rows="1"></textarea>
+
+          <br>
+          <label for="folioPagina">Fólio/Página</label>
+          <input type="text" id="folioPagina" class="md-textarea form-control" rows="1">
+
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" onclick="addNovaResposta();">Criar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal Criar  -->
+
+
+  <!-- ************************ Modals Popup ************************ -->
+  <!--************************ Referencia Documental ************************-->
+  <div class="modal" id="modalRefDoc">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Referência documental</h4>
+          <button type="button" class="btn" onclick="cancelRefDoc();"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procrefDoc" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="listRefDoc(document.getElementById('procrefDoc').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabRefDoc" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" onclick="cancelRefDoc();">Fechar</button>
+          <button type="button" id="btnAdd" class="btn btn-danger" onclick="goToModalRef();">Criar Referência</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="xptodel">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--***************************************-->
+  <!-- Modal Criar Referencia -->
+  <!--***************************************-->
+  <div class="modal" id="criarRefDoc">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Referência Documental</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Modal body -->
+
+
+        <div class="modal-body">
+          <input type="hidden" id="ref_docValue">
+          <label for="refDocAdd">Referência</label>
+          <input type="text" id="refDocAdd" class="md-textarea form-control" rows="1">
+          <br>
+          <label for="compAdd">Complemento</label>
+          <input type="text" id="compAdd" class="md-textarea form-control" rows="1" maxlength="10">
+          <br>
+          <label for="urlAdd">URL</label>
+          <input type="text" id="urlAdd" class="md-textarea form-control" rows="1">
+          <br>
+          <div id="tipRef"></div>
+
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" id="btnAdd" class="btn btn-danger" onclick="addRefDoc();">Criar</button>
+          <button type="button" class="btn" onclick="cancelModalRef();">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal Criar  -->
+
+  <div class="modal" id="xptodel">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--************************ Registro ************************-->
+  <div class="modal" id="modalRegistro">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4>Registro</h4>
+          <button type="button" class="btn" onclick="cancelRegistro();"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="d-flex" style="margin: 10px;">
+          <input class="form-control me-2" type="search" id="procRegistro" placeholder="Procurar" aria-label="Procurar">
+          <button class="btn btn-outline-success"
+            onclick="listRegistroAdd(0,document.getElementById('procRegistro').value);">Procurar</button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabRegistro" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" onclick="cancelRegistro();">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+<script>
+  showMenu();
+    if (!sessionStorage.getItem("v_pageNum")){
+      getAllRespostas(1, 10);
+    }else{
+      getAllRespostas(parseInt(sessionStorage.getItem("v_pageNum")), 10);
+    }
+
+  // Formata a data 
+  $('.datepicker').datepicker({
+    format: 'dd/mm/yyyy',
+    startDate: '01/01/1720',
+    endDate: '31/12/1819',
+  }).attr('readonly', 'readonly').on('changeDate', function (e) {
+    $(this).datepicker('hide');
+  });
+</script>
+
+</html>

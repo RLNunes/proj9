@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Circuitos Oceânicos</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+    integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/all.css" />
+  <!-- Include Bootstrap Datepicker -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+
+  <script src="./js/sweetalert2.all.min.js"></script>
+
+
+  <link rel="stylesheet" href="./css/style.css" />
+
+  <script src="./js/menu.js"></script>
+  <script src="./js/socJur.js"></script>
+
+  <script>
+    async function showMenu() {
+      document.getElementById("menu").innerHTML = await getMenuAdmin('socJur', 1);
+    }
+
+    function criar() {
+      document.getElementById("socJurAdd").value ='';
+      $('#criarSocJur').modal('show');
+      document.getElementById("btnSave").style.display = 'none';
+      document.getElementById("btnDel").style.display = 'none';
+      document.getElementById("btnCriar").style.display = 'block';
+    }
+
+  </script>
+</head>
+
+<body>
+  <div id="menu"></div>
+  <br>
+  <div id="body" style="margin: 2px;">
+    <div id="titulo" width="100%" style="border: 1px solid #000; "align="center"><h1>Marcador Sócio Jurídico</h1></div><br>
+    <button type="button" class="btn btn-primary" onclick="criar();">
+      Sócio Jurídico
+    </button>
+    <div id="TableSocJur"></div>
+
+  </div>
+
+  <!-- Modal Criar Marcador Sócio Jurídico  -->
+  <div class="modal" id="criarSocJur">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Sócio Jurídico</h4>
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Modal body -->
+
+
+        <div class="modal-body">
+
+          <label for="termoAdd">Marcador</label>
+          <input type="hidden" id="socJurId">
+          <input type="text" id="socJurAdd" class="md-textarea form-control" rows="1">
+
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" data-dismiss="modal">Cancelar</button>
+          <button type="button" id="btnCriar" class="btn btn-primary" onclick="addSocJur();"
+            style="display: block;">Criar</button>
+          <button type="button" id="btnSave" class="btn btn-primary" onclick="saveSocJur ();"
+            style="display: none;">Alterar</button>
+            <button type="button" id="btnDel" class="btn btn-danger" onclick="delSocJur();"
+              style="display: block;">Eliminar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal Criar  -->
+
+
+  <!-- Modal XPTO -->
+  <div class="modal" id="xpto2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <button type="button" class="btn" data-dismiss="modal"><i class="fas fa-times"></i></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--  Fim Modal xpto  -->
+
+
+  <script>
+    showMenu();
+    getAllSocJur(1,10);
+    var input = document.getElementById("VSearch");
+    input.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        search(document.getElementById("VSearch").value);
+      }
+    });
+
+    // Formata a data 
+    $('.datepicker').datepicker({
+      format: 'dd/mm/yyyy',
+      startDate: '01/01/1720',
+      endDate: '31/12/1819',
+    }).attr('readonly', 'readonly').on('changeDate', function (e) {
+      $(this).datepicker('hide');
+    });
+  </script>
+
+</body>
+
+</html>

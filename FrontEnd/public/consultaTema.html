@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Circuitos Oceânicos</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+    integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/all.css" />
+  <!-- Include Bootstrap Datepicker -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+
+  <script src="./js/sweetalert2.all.min.js"></script>
+
+
+  <link rel="stylesheet" href="./css/style.css" />
+  <script src="./js/menu.js"></script>
+  <script src="./js/consultaTema.js"></script>
+
+
+  <script>
+    async function showMenu() {
+      document.getElementById("menu").innerHTML = await getMenuConsulta('Tema');
+    }
+  </script>
+</head>
+
+<body>
+  <div id="menu"></div>
+  <div id="body"></div>
+  <script>
+    showMenu();
+  </script>
+  <div id="titulo" width="100%" style="border: 1px solid #000; " align="center">
+    <h1>Temas</h1>
+  </div><br>
+  <div id="TablePessoa"></div>
+
+  <!-- ************************ Modals Popup ************************ -->
+  <div class="modal" id="xptodel">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--************************ Lista de Detalhes ************************-->
+  <div class="modal" id="modalDetalhes">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title" id="tituloDetalhe">Detalhes</h4>
+          <h2 id="nomePes"></h2>
+          <button type="button" class="btn" onclick="cancelDetalhes();"><i class="fas fa-times"></i></button>
+        </div>
+        <!-- Modal body -->
+        <div id="tabDetalhes" class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn" onclick="cancelDetalhes();">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  getAllTemasCon(1, 10);
+</script>
+
+</html>

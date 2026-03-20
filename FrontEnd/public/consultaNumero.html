@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Circuitos Oceânicos</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+    integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/all.css" />
+  <!-- Include Bootstrap Datepicker -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+
+  <script src="./js/sweetalert2.all.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> <!-- Biblioteca de Gráficos -->
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+
+
+  <link rel="stylesheet" href="./css/style.css" />
+  <script src="./js/menu.js"></script>
+  <script src="./js/consultaNumero.js"></script>
+
+
+  <script>
+    async function showMenu() {
+      document.getElementById("menu").innerHTML = await getMenuConsulta('Numeros');
+    }
+  </script>
+</head>
+
+<body>
+  <div id="menu"></div>
+  <div id="body"></div>
+  <script>
+    showMenu();
+  </script>
+  <h1 style="margin-left: 30px; margin-bottom: 10px;">Números</h1>
+  <div id="allNumbers" style="border: 1px solid #000; margin-bottom: 10px; text-align: center;" class="rows">
+    <div class="row">
+      <div id="TotProvDisp" class="col-sm-2" style="text-align: center; ">
+        <h5 style="margin-left: 100px;">Provocação</h5>
+        <canvas id="TotProv"></canvas>
+      </div>
+      <div id="TotManDisp" class="col-sm-2" style="text-align: center;">
+        <h5 style="margin-left: 100px;">Mandado</h5>
+        <canvas id="TotMan"></canvas>
+      </div>
+      <div id="TotConDisp" class="col-sm-2" style="text-align: center;">
+        <h5 style="margin-left: 100px;">Consulta</h5>
+        <canvas id="TotCon"></canvas>
+      </div>
+      <div id="TotUltraDisp" class="col-sm-2" style="text-align: center;">
+        <h5 style="margin-left: 100px;">Ultramar</h5>
+        <canvas id="TotUltra"></canvas>
+      </div>
+      <div id="TotResDisp" class="col-sm-2" style="text-align: center;">
+        <h5 style="margin-left: 100px;">Resposta</h5>
+        <canvas id="TotRes"></canvas>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div id="TotalDisp" style="text-align: center;">
+      <h5 style="margin-left: 10px;">Total</h5>
+      <canvas id="TotalNum"></canvas>
+    </div>
+  </div>
+  <h3 style="margin-left: 30px; margin-bottom: 10px;">Outros Números</h3>
+  <div id="otherNumbers" style="border: 1px solid #000; margin-bottom: 10px; text-align: center;" class="rows">
+    <div class="row">
+      <div id="TotPesDisp" class="col-sm-2" style="text-align: center;">
+        <h5 style="margin-left: 100px;">Pessoa</h5>
+        <canvas id="TotPes"></canvas>
+      </div>
+      <div id="TotTermoDisp" class="col-sm-2" style="text-align: center;">
+        <h5 style="margin-left: 100px;">Termo</h5>
+        <canvas id="TotTer"></canvas>
+      </div>
+      <div id="TotFregDisp" class="col-sm-2" style="text-align: center;">
+        <h5 style="margin-left: 100px;">Freguesia</h5>
+        <canvas id="TotFreg"></canvas>
+      </div>
+      <div id="TotComarcaDisp" class="col-sm-2" style="text-align: center;">
+        <h5 style="margin-left: 100px;">Comarca</h5>
+        <canvas id="TotComa"></canvas>
+      </div>
+      <div id="TotCapitaDisp" class="col-sm-2" style="text-align: center;">
+        <h5 style="margin-left: 100px;">Capitania</h5>
+        <canvas id="TotCapi"></canvas>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  startConcultaNum();
+</script>
+
+</html>
