@@ -1,156 +1,57 @@
-//const v_url = 'http://localhost:8080';
 let vIsAdmin = 'N'
 
+// TOKEN_SERVICE é a chave de API estática usada para autenticar pedidos ao Payara.
+// É o mesmo valor configurado no JNDI TOKEN_SERVICE do Payara.
+const TOKEN_SERVICE = 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY3MDI2ODYzOCwiaWF0IjoxNjcwMjY4NjM4fQ.uygunXd7eT8C0ZXc8Cfqnn-l9zGi3Rg9QWRkIxsThvg';
+
+// Retorna o token de serviço se o utilizador tiver sessão iniciada, ou '' caso contrário.
+// A sessão é guardada em localStorage pela função login().
 async function getToken() {
-  //const url = "http://localhost/api/getToken";
-  const url = window.location.origin + "/api/getToken";
   let token = localStorage.token;
-  if (token != null) {
-    const myInit = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const myRequest = new Request(url, myInit);
-    await fetch(myRequest).then(async function (response) {
-      if (!response.ok) {
-        token = '';
-        document.getElementById('body').innerHTML = '';
-      } else {
-        const tokenGet = await response.json();
-        token = tokenGet.token;
-        vIsAdmin = tokenGet.isAdmin;
-      }
-    })
+  if (token) {
+    vIsAdmin = localStorage.isAdmin || 'N';
+    return token;
   }
-  else {
-    token = '';
-  }
-  return token;
+  return '';
 }
 
+// Igual a getToken() mas limpa o body se o utilizador não for administrador.
 async function getAdminToken() {
-  //const url = "http://localhost/api/getToken";
-  const url = window.location.origin + "/api/getToken";
   let token = localStorage.token;
-  if (token != null) {
-    const myInit = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const myRequest = new Request(url, myInit);
-    await fetch(myRequest).then(async function (response) {
-      if (!response.ok) {
-        token = '';
-        document.getElementById('body').innerHTML = '';
-      } else {
-        const tokenGet = await response.json();
-        if (tokenGet.isAdmin == 'Y') {
-          token = tokenGet.token;
-          vIsAdmin = tokenGet.isAdmin;
-        } else {
-          document.getElementById('body').innerHTML = '';
-        }
-      }
-    })
-  }
-  else {
-    token = '';
-  }
-  return token;
-}
-
-async function getUrlPayaraDireto() {
-  //const url = "http://localhost/api/getUrl";
-  // let link;
-  
-  const url = window.location.origin + "/api/getUrlPayaraDireto";
-  
-  const myInit = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-  };
-
-  const myRequest = new Request(url, myInit);
-  await fetch(myRequest).then(async function (response) {
-    if (!response.ok) {
-      link = '';
-    } else {
-      const urlGet = await response.json();
-      link = urlGet.url;
+  if (token) {
+    vIsAdmin = localStorage.isAdmin || 'N';
+    if (vIsAdmin !== 'Y') {
+      document.getElementById('body').innerHTML = '';
+      return '';
     }
-  })
-  return link;
+    return token;
+  }
+  document.getElementById('body').innerHTML = '';
+  return '';
 }
 
-async function getUrlNode() {
-  //const url = "http://localhost/api/getUrl";
-  // let link;
-  
-  const url = window.location.origin + "/api/getUrlNode";
-  
-  const myInit = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-  };
-
-  const myRequest = new Request(url, myInit);
-  await fetch(myRequest).then(async function (response) {
-    if (!response.ok) {
-      link = '';
-    } else {
-      const urlGet = await response.json();
-      link = urlGet.url;
-    }
-  })
-  return link;
+// Devolve o prefixo "/api" para construir URLs relativas para o Payara.
+// O Nginx faz o reverse proxy de /api/ para http://circ.peticionario.payara:8080/,
+// pelo que /api/CircPeticionario/webresources/... chega corretamente ao Payara.
+function getUrlPayaraDireto() {
+  return Promise.resolve('/api');
 }
 
+// getUrlNode() já não é necessária (Node foi substituído pelo Nginx),
+// mas mantém-se por compatibilidade com login.js e utilizador.js.
+function getUrlNode() {
+  return Promise.resolve('');
+}
 
+// Devolve o estado de administrador a partir do localStorage.
 async function getIsAdmin() {
-  //const url = "http://localhost/api/isAdmin";
-  const url = window.location.origin + "/api/isAdmin";
-  let token = localStorage.token;
-  let getAdmin = null;
-  if (token != null) {
-    const myInit = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const myRequest = new Request(url, myInit);
-    await fetch(myRequest).then(async function (response) {
-      if (!response.ok) {
-        token = '';
-      } else {
-        getAdmin = await response.json();
-        console.log('isAdmin: ' + getAdmin.isAdmin);
-        return getAdmin.isAdmin;
-      }
-    })
-  }
-  else {
-    return null;
-  }
-  return getAdmin.isAdmin;
+  return localStorage.isAdmin || 'N';
 }
 
 
 function logout() {
-  //localStorage.removeItem("token");
-
   localStorage.removeItem("token");
+  localStorage.removeItem("isAdmin");
   window.location.replace("index.html");
 }
 

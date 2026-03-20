@@ -165,20 +165,33 @@ async function addUtilizador() {
 
     } else {
         //const url = "http://localhost/api";
-		const url = await getUrlNode() + "/api";
-		console.log("Criar user: " + url);
+		// Chamar o Payara diretamente via Nginx proxy (/api/ → Payara)
+		const urlBase = await getUrlPayaraDireto() + '/CircPeticionario/webresources/utilizadores/insert';
+		console.log("Criar user: " + urlBase);
         let vIsAdmin;
         if (document.getElementById("adminAdd").checked == true) {
             vIsAdmin = 'Y';
         } else {
             vIsAdmin = 'N';
         }
-        fetch(`${url}/registar`, {
+        // Gerar hash bcrypt da password antes de enviar para o Payara
+        const saltRounds = 10;
+        const rawPassword = document.getElementById("senhaAdd").value;
+        const hashedPassword = await bcrypt.hash(rawPassword, saltRounds);
+        const objUser = {
+            nome: document.getElementById("nomeAdd").value,
+            email: document.getElementById("emailAdd").value,
+            username: document.getElementById("utilizadorAdd").value,
+            password: hashedPassword,
+            isAdmin: vIsAdmin
+        };
+        fetch(urlBase, {
             headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
+                "Content-Type": "application/json",
+                "token": await getToken()
             },
             method: "POST",
-            body: `nome=${document.getElementById("nomeAdd").value}&email=${document.getElementById("emailAdd").value}&username=${document.getElementById("utilizadorAdd").value}&password=${document.getElementById("senhaAdd").value}&isAdmin=${vIsAdmin}`,
+            body: JSON.stringify(objUser),
         })
             .then((response) => {
                 Swal.fire({
@@ -240,7 +253,9 @@ async function saveUtilizador() {
 
     } else {
         //const url = "http://localhost/api";
-		const url = await getUrlNode() + "/api";
+		// Chamar o Payara diretamente via Nginx proxy (/api/ → Payara)
+		const userId = document.getElementById("utilizadorId").value;
+		const urlBase = await getUrlPayaraDireto() + '/CircPeticionario/webresources/utilizadores/update/' + userId;
 
         let vIsAdmin;
         if (document.getElementById("adminAdd").checked == true) {
@@ -253,27 +268,31 @@ async function saveUtilizador() {
         const nome = document.getElementById("nomeAdd").value;
         const email = document.getElementById("emailAdd").value;
         const username = document.getElementById("utilizadorAdd").value;
-        const password = document.getElementById("senhaAdd").value;
-        const userId = document.getElementById("utilizadorId").value;
+        const rawPassword = document.getElementById("senhaAdd").value;
 
         // Log de debug
         console.log("Dados a enviar:");
         console.log("nome:", nome);
         console.log("email:", email);
         console.log("username:", username);
-        console.log("password:", password);
         console.log("isAdmin:", vIsAdmin);
         console.log("userId:", userId);
 		
+		// Gerar hash bcrypt se foi fornecida uma nova password; caso contrário enviar ''
+        let password = '';
+        if (rawPassword !== '') {
+            password = await bcrypt.hash(rawPassword, 10);
+        }
+
+        const objUser = { nome, username, password, email, isAdmin: vIsAdmin };
 		
-        fetch(`${url}/alterar`, {
+        fetch(urlBase, {
             headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
+                "Content-Type": "application/json",
+                "token": await getToken()
             },
             method: "PUT",
-            body: `nome=${document.getElementById("nomeAdd").value}&email=${document.getElementById("emailAdd").value}` +
-                `&username=${document.getElementById("utilizadorAdd").value}&password=${document.getElementById("senhaAdd").value}` +
-                `&isAdmin=${vIsAdmin}&userId=${document.getElementById("utilizadorId").value}`,
+            body: JSON.stringify(objUser),
         })
             .then((response) => {
                 Swal.fire({
@@ -311,10 +330,12 @@ async function delUtilizador() {
     }).then(async (result) => {
         if (result.isConfirmed) {
             //const url = "http://localhost/api";
-			const url = await getUrlNode() + "/api";
-            fetch(`${url}/delete/${document.getElementById("utilizadorId").value}`, {
+			// Chamar o Payara diretamente via Nginx proxy (/api/ → Payara)
+			const urlDel = await getUrlPayaraDireto() + '/CircPeticionario/webresources/utilizadores/delete/' + document.getElementById("utilizadorId").value;
+            fetch(urlDel, {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
+                    "token": await getToken()
                 },
                 method: "DELETE"
             })
