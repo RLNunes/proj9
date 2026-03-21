@@ -1,6 +1,10 @@
 
 // Autenticação do utilizador via Payara (sem Node.js).
 // O Nginx faz o proxy de /api/ → Payara, pelo que não há pedidos cross-origin.
+
+// Alias para bcryptjs (a lib expõe-se como dcodeIO.bcrypt)
+const bcrypt = dcodeIO.bcrypt;
+
 async function login() {
     var errForm = "";
     if (document.getElementById("usernameLogin").value == "") {

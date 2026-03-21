@@ -1,4 +1,8 @@
 /************************* Utilizadores  *************************** */
+
+// Alias para bcryptjs (a lib expõe-se como dcodeIO.bcrypt)
+const bcrypt = dcodeIO.bcrypt;
+
 /************************ Lista todos os Utilizadores ****************************** */
 async function getUtilizadores(pageNum, rowsPage) {
     const urlBase = await getUrlPayaraDireto() + "/CircPeticionario/webresources/utilizadores/all/" + pageNum + "/" + rowsPage;
