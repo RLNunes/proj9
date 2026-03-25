@@ -12,6 +12,7 @@ cd CircPeticionario-WebApp
 cd ..
 
 rem A rede e gerida automaticamente pelo Compose; nao e necessario cria-la manualmente.
+rem O frontend e empacotado numa imagem Nginx (FrontEnd/Dockerfile); use --build para incluir alteracoes aos ficheiros estaticos e configuracao.
 
 %ContainerBinary% compose -f %ComposeFile% -p %ProjectName% up --build -d
 

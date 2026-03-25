@@ -24,6 +24,7 @@ Este ficheiro descreve os passos necessários para replicar o sistema a partir d
    docker compose -f CircPeticionario-Compose.yaml -p circ_peticionario up --build
    ```
    Em alernativa ao comando `docker` pode utilizar o `podman`
+   O parâmetro `--build` recompila a imagem do frontend Nginx definida em `FrontEnd/Dockerfile`, incorporando os ficheiros estáticos de `FrontEnd/public` e o `nginx/default.conf` (sem dependência de mounts locais).
 
    > **Nota:** Já não é necessário criar a rede manualmente. O Compose gere a rede `network_circ_peticionario` automaticamente.
 
