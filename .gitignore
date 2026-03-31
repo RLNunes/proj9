@@ -42,3 +42,8 @@ logs/
 
 # Git
 .git/
+
+# Angular / Node
+node_modules/
+dist/
+.angular/
