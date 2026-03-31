@@ -67,3 +67,7 @@ services:
     networks:
       - network_circ_peticionario
     restart: unless-stopped
+    # Em desenvolvimento, os ficheiros são lidos diretamente do host.
+    volumes:
+      - ./FrontEnd/public:/usr/share/nginx/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
