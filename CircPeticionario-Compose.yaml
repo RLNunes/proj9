@@ -1,7 +1,8 @@
 networks:
+  # Rede gerida pelo Compose — não é necessário criar manualmente antes de arrancar
   network_circ_peticionario:
-    external: true
-                
+    driver: bridge
+
 volumes:
   postgres_data: {}
 
@@ -24,27 +25,11 @@ services:
     networks:
       - network_circ_peticionario
     restart: unless-stopped
-
-  # App - Node.js
-  srv_app:
-    build:
-      context: ./FrontEnd
-      dockerfile: Dockerfile
-    image: circ_peticionario_image_app  
-    container_name: circ_peticionario_cnt_app
-    hostname: circ.peticionario.app
-    working_dir: /app
-    environment:
-      - PORT=8080
-    ports:
-      - '9081:8080'     # Web Server
-      - '2222:22'       # SSH Server
-    depends_on:
-      - data_base
-    command: ["node", "index.js"]
-    networks:
-      - network_circ_peticionario
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Payara
   payara:
@@ -60,6 +45,29 @@ services:
     ports:
       - '9082:8080'     # Web Server
       - '9848:4848'     # Payara Admin Web Console
+    depends_on:
+      data_base:
+        condition: service_healthy
     networks:
       - network_circ_peticionario
     restart: unless-stopped
+
+  # Nginx — serve ficheiros estáticos do FrontEnd e faz reverse proxy da API para o Payara
+  nginx:
+    build:
+      context: .
+      dockerfile: FrontEnd/Dockerfile
+    image: circ_peticionario_image_frontend
+    container_name: circ_peticionario_cnt_nginx
+    hostname: circ.peticionario.nginx
+    ports:
+      - '80:80'         # Frontend + API proxy
+    depends_on:
+      - payara
+    networks:
+      - network_circ_peticionario
+    restart: unless-stopped
+    # Em desenvolvimento, os ficheiros são lidos diretamente do host.
+    volumes:
+      - ./FrontEnd/public:/usr/share/nginx/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro

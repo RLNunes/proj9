@@ -1,8 +1,12 @@
 
-// função de criação de novo utilizador
+// Autenticação do utilizador via Payara (sem Node.js).
+// O Nginx faz o proxy de /api/ → Payara, pelo que não há pedidos cross-origin.
+
+// Alias para bcryptjs (a lib expõe-se como dcodeIO.bcrypt)
+const bcrypt = dcodeIO.bcrypt;
+
 async function login() {
     var errForm = "";
-    // validação do preenchimento dos campos
     if (document.getElementById("usernameLogin").value == "") {
         errForm += "Utilizador é obrigatório.<br>";
     }
@@ -16,70 +20,50 @@ async function login() {
             showConfirmButton: false,
             timer: 4500,
         });
-
     } else {
-        //const url = "http://localhost/api";
-		const url = await getUrlNode() + "/api";
-		console.log('teste: ' + url);
-		const bodyContent = `username=${document.getElementById("usernameLogin").value}&password=${document.getElementById("senhaLogin").value}`;
+        const username = document.getElementById("usernameLogin").value;
+        const password = document.getElementById("senhaLogin").value;
+        // Verificar se o utilizador existe no Payara (devolve o hash da password e isAdmin)
+        const existUrl = '/api/CircPeticionario/webresources/utilizadores/exist/' + encodeURIComponent(username);
         try {
-			//console.log(`${url}/login`);
-            fetch(`${url}/login`, {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                credentials: "include",
-                method: "POST",
-                body: `username=${document.getElementById("usernameLogin").value}&password=${document.getElementById("senhaLogin").value}`,
-            })
-                .then(async (response) => {
-                    result = await response.json();
-                    if (!response.ok) {
-                        Swal.fire({
-                            icon: "error",
-                            title: result.message,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        }).then(function () {
-                            $('#modalLogin').modal('hide');
-                        });
-                        // statReg.innerHTML = response.statusText;
-                    } else {
-                        localStorage.setItem("token", result.token);
-                        $('#modalLogin').modal('hide');
-                        Swal.fire({
-                            icon: "success",
-                            title: result.message,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        }).then(function () {
-                            window.location.replace("index.html");
-                        });
-                    }
-                })
-                .catch((error) => {
-                    //console.log(error);
-                    exit = error;
-                    Swal.fire({
-                        icon: "error",
-                        title: "Erro na autenticação.<br>" + error,
-                        showConfirmButton: false,
-                        timer: 1500,
-                    }).then(function () {
-                        $('#modalLogin').modal('hide');
-                    });
-                });
-        }
-        catch {
+            const response = await fetch(existUrl, {
+                method: 'GET',
+                headers: { 'token': TOKEN_SERVICE }
+            });
+            if (!response.ok) {
+                throw new Error('Utilizador não encontrado.');
+            }
+            const dados = await response.json();
+            if (!dados.user_id || dados.user_id === 0) {
+                throw new Error('Utilizador ou senha incorretos.');
+            }
+            // Comparar a password introduzida com o hash bcrypt guardado no Payara
+            const passwordOk = await bcrypt.compare(password, dados.password);
+            if (!passwordOk) {
+                throw new Error('Utilizador ou senha incorretos.');
+            }
+            // Guardar sessão no localStorage
+            localStorage.setItem('token', TOKEN_SERVICE);
+            localStorage.setItem('isAdmin', dados.isAdmin || 'N');
+            $('#modalLogin').modal('hide');
             Swal.fire({
-                icon: "error",
-                title: "Erro na autenticação.<br>" + error,
+                icon: 'success',
+                title: 'Autenticação com sucesso!',
+                showConfirmButton: false,
+                timer: 1500,
+            }).then(function () {
+                window.location.replace('index.html');
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: error.message || 'Erro na autenticação.',
                 showConfirmButton: false,
                 timer: 1500,
             }).then(function () {
                 $('#modalLogin').modal('hide');
             });
-
         }
     }
 }
+

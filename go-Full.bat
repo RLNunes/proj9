@@ -6,20 +6,14 @@ rem set ContainerBinary=podman
 
 set ComposeFile=CircPeticionario-Compose.yaml
 set ProjectName=circ_peticionario
-set Network=network_circ_peticionario
 
 cd CircPeticionario-WebApp
 	call go-BuildWithClean.bat
 cd ..
 
-%ContainerBinary% network rm %Network%
+rem A rede e gerida automaticamente pelo Compose; nao e necessario cria-la manualmente.
+rem O frontend e empacotado numa imagem Nginx (FrontEnd/Dockerfile); use --build para incluir alteracoes aos ficheiros estaticos e configuracao.
 
-%ContainerBinary% network create %Network%
-
-%ContainerBinary% compose -f %ComposeFile% -p %ProjectName% build
-
-%ContainerBinary% compose -f %ComposeFile% -p %ProjectName% create
+%ContainerBinary% compose -f %ComposeFile% -p %ProjectName% up --build -d
 
 pause
-
-%ContainerBinary% compose -f %ComposeFile% -p %ProjectName% start

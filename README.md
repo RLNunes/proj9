@@ -21,15 +21,12 @@ Este ficheiro descreve os passos necessários para replicar o sistema a partir d
       call go-BuildWithClean.bat
    cd ..
 
-   docker network rm network_circ_peticionario
-
-   docker network create network_circ_peticionario
-
-   docker compose -f CircPeticionario-Compose.yaml -p circ_peticionario build
-
-   docker compose -f CircPeticionario-Compose.yaml -p circ_peticionario create
+   docker compose -f CircPeticionario-Compose.yaml -p circ_peticionario up --build
    ```
    Em alernativa ao comando `docker` pode utilizar o `podman`
+   O parâmetro `--build` recompila a imagem do frontend Nginx definida em `FrontEnd/Dockerfile`, incorporando os ficheiros estáticos de `FrontEnd/public` e o `nginx/default.conf` (sem dependência de mounts locais).
+
+   > **Nota:** Já não é necessário criar a rede manualmente. O Compose gere a rede `network_circ_peticionario` automaticamente.
 
    Outros comandos `docker`/`podman` que podem ser uteis
 
@@ -120,13 +117,21 @@ Este ficheiro descreve os passos necessários para replicar o sistema a partir d
    
    - `circ_peticionario_cnt_db`
    - `circ_peticionario_cnt_payara`
-   - `circ_peticionario_cnt_app`
+   - `circ_peticionario_cnt_nginx`
 
    Certifique-se de que todos estão com o estado "Running".
    
-2. **Aceder à página de administração do Payara**
+2. **Aceder à aplicação**
 
-   No browser, aceder à página de administração do Payara: [http://localhost:4848](http://localhost:4848)
+   - **Frontend:** [http://localhost/](http://localhost/)
+   - **Payara Admin Console:** [http://localhost:9848/](http://localhost:9848/)
+   - **Payara Web Server:** [http://localhost:9082/](http://localhost:9082/)
+
+   > O frontend utiliza `/api/...` (reverse proxy Nginx → Payara) para todas as chamadas à API, evitando erros CORS.
+
+3. **Aceder à página de administração do Payara**
+
+   No browser, aceder à página de administração do Payara: [http://localhost:9848](http://localhost:9848)
 
    Para fazer login, utilizar as seguintes credenciais:
    - **User Name**: `admin`
