@@ -2,6 +2,28 @@
 
 Este ficheiro descreve os passos necessários para replicar o sistema a partir do zero.
 
+## Arquitetura
+
+```
+Browser → Nginx → Payara → PostgreSQL
+```
+
+- **Nginx** serve os ficheiros estáticos do frontend Angular e faz reverse proxy de `/api/...` para o Payara.
+- **Payara** expõe a API REST em `/CircPeticionario/webresources/...`.
+- **PostgreSQL** é a base de dados relacional.
+- **Angular** (`Frontend - Angular/`) é construído como ficheiros estáticos e servido pelo Nginx.
+
+## Estrutura relevante
+
+| Diretoria / Ficheiro | Descrição |
+|---|---|
+| `Frontend - Angular/` | Nova aplicação Angular com Tailwind CSS |
+| `FrontEnd/` | Frontend legado (HTML estático) — mantido por compatibilidade |
+| `Payara/` | Aplicação Jakarta EE / Payara |
+| `DataBase/` | Schemas PostgreSQL |
+| `nginx/default.conf` | Configuração Nginx (SPA fallback + proxy `/api`) |
+| `CircPeticionario-Compose.yaml` | Orquestração Docker Compose |
+
 ## Pré-requisitos
 
 - Docker Desktop ou Podman Desktop instalado
@@ -23,8 +45,10 @@ Este ficheiro descreve os passos necessários para replicar o sistema a partir d
 
    docker compose -f CircPeticionario-Compose.yaml -p circ_peticionario up --build
    ```
-   Em alernativa ao comando `docker` pode utilizar o `podman`
-   O parâmetro `--build` recompila a imagem do frontend Nginx definida em `FrontEnd/Dockerfile`, incorporando os ficheiros estáticos de `FrontEnd/public` e o `nginx/default.conf` (sem dependência de mounts locais).
+   Em alternativa ao comando `docker` pode utilizar o `podman`
+
+   O parâmetro `--build` compila a imagem do frontend Angular (multi-stage: Node → Nginx) definida em
+   `Frontend - Angular/Dockerfile`, incorporando os ficheiros produzidos por `ng build` e o `nginx/default.conf`.
 
    > **Nota:** Já não é necessário criar a rede manualmente. O Compose gere a rede `network_circ_peticionario` automaticamente.
 
