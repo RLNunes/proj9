@@ -4,11 +4,12 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy package files first for layer caching
-COPY package*.json ./
+COPY ["Frontend-Angular/package.json", "./"]
+COPY ["Frontend-Angular/package-lock.json", "./"]
 RUN npm ci --prefer-offline
 
 # Copy source and build
-COPY . .
+COPY ["Frontend-Angular/", "./"]
 RUN npm run build -- --configuration production
 
 # ── Stage 2: Serve with Nginx ─────────────────────────────────────────────────

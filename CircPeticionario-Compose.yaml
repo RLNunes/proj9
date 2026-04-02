@@ -56,7 +56,7 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: Frontend - Angular/Dockerfile
+      dockerfile: Frontend-Angular/Dockerfile
     image: circ_peticionario_image_frontend
     container_name: circ_peticionario_cnt_nginx
     hostname: circ.peticionario.nginx

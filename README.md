@@ -11,13 +11,13 @@ Browser → Nginx → Payara → PostgreSQL
 - **Nginx** serve os ficheiros estáticos do frontend Angular e faz reverse proxy de `/api/...` para o Payara.
 - **Payara** expõe a API REST em `/CircPeticionario/webresources/...`.
 - **PostgreSQL** é a base de dados relacional.
-- **Angular** (`Frontend - Angular/`) é construído como ficheiros estáticos e servido pelo Nginx.
+- **Angular** (`Frontend-Angular/`) é construído como ficheiros estáticos e servido pelo Nginx.
 
 ## Estrutura relevante
 
 | Diretoria / Ficheiro | Descrição |
 |---|---|
-| `Frontend - Angular/` | Nova aplicação Angular com Tailwind CSS |
+| `Frontend-Angular/` | Nova aplicação Angular com Tailwind CSS |
 | `FrontEnd/` | Frontend legado (HTML estático) — mantido por compatibilidade |
 | `Payara/` | Aplicação Jakarta EE / Payara |
 | `DataBase/` | Schemas PostgreSQL |
@@ -48,7 +48,7 @@ Browser → Nginx → Payara → PostgreSQL
    Em alternativa ao comando `docker` pode utilizar o `podman`
 
    O parâmetro `--build` compila a imagem do frontend Angular (multi-stage: Node → Nginx) definida em
-   `Frontend - Angular/Dockerfile`, incorporando os ficheiros produzidos por `ng build` e o `nginx/default.conf`.
+   `Frontend-Angular/Dockerfile`, incorporando os ficheiros produzidos por `ng build` e o `nginx/default.conf`.
 
    > **Nota:** Já não é necessário criar a rede manualmente. O Compose gere a rede `network_circ_peticionario` automaticamente.
 
