@@ -5,11 +5,6 @@
   "projects": {
     "frontend-angular": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
-      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -101,7 +96,8 @@
   },
   "schematics": {
     "@schematics/angular:component": {
-      "type": "component"
+      "type": "component",
+      "style": "none"
     },
     "@schematics/angular:directive": {
       "type": "directive"
