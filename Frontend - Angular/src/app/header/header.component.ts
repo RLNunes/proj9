@@ -1,10 +1,8 @@
 ﻿import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-
+import { GlobalHeaderComponent } from '../core/layout/global-header/global-header.component';
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [GlobalHeaderComponent],
   templateUrl: './header.component.html',
 })
 export class HeaderComponent {}
-
