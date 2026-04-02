@@ -3,7 +3,7 @@
   selector: 'app-ultramar',
   imports: [],
   templateUrl: './ultramar.component.html',
-  styleUrl: './ultramar.component.scss',
 })
 export class UltramarComponent {
 }
+
