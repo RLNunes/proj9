@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+﻿import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Select} from 'primeng/select';
 import {Button} from 'primeng/button';
 import {FormGroup, ReactiveFormsModule} from '@angular/forms';
@@ -14,7 +14,6 @@ import {InputText} from 'primeng/inputtext';
     ReactiveFormsModule,
     InputText
   ],
-  standalone: true
 })
 export class FilterFormComponent {
   @Input() placeholder!: string;
@@ -44,3 +43,4 @@ export class FilterFormComponent {
    //TODO limpar form
   }
 }
+

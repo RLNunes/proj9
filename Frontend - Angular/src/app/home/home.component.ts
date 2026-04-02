@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
-import { ApiService } from '../services/api.service';
+﻿import { Component } from '@angular/core';
+import { ApiService } from '../core/services/api.service';
 import {ProvocacaoComponent} from '../shared/components/provocacao.component';
 
 @Component({
   selector: 'app-home',
-  standalone: true,
   templateUrl: './home.component.html',
   imports: [
     ProvocacaoComponent
@@ -29,3 +28,4 @@ export class HomeComponent {
     });
   }
 }
+

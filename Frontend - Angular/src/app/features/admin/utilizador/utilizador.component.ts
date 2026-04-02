@@ -2,10 +2,10 @@
 
 @Component({
   selector: 'app-utilizador',
-  imports: [],
   templateUrl: './utilizador.component.html',
 })
 export class UtilizadorComponent {
 
 }
+
 

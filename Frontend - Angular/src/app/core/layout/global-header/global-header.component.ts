@@ -2,10 +2,10 @@
 
 @Component({
   selector: 'app-global-header',
-  imports: [],
   templateUrl: './global-header.component.html',
 })
 export class GlobalHeaderComponent {
 
 }
+
 

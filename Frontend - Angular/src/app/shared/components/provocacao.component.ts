@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import {FilterFormComponent} from './filter-form.component';
+﻿import { Component, Input } from '@angular/core';
+import {FilterFormComponent} from './filter-form/filter-form.component';
 import {Button} from 'primeng/button';
 
 @Component({
@@ -9,8 +9,8 @@ import {Button} from 'primeng/button';
     FilterFormComponent,
     Button
   ],
-  standalone: true
 })
 export class ProvocacaoComponent{
   @Input() title!: string
 }
+
