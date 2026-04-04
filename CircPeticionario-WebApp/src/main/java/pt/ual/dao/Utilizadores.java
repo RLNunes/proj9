@@ -9,10 +9,12 @@
  import java.util.LinkedHashMap;
  import java.util.List;
  import java.util.Map;
+  import pt.ual.auth.service.PasswordService;
  import pt.ual.utils.Utils;
 
  public class Utilizadores
  {
+      private final PasswordService passwordService = new PasswordService();
    private int user_id;
    private String nome;
    private String username;
@@ -244,7 +246,7 @@
      try {
        c = Utils.getConnectionStock();
        String q = "select user_id, password, admin from app_hist.utilizadores where lower(username) = lower(?) ";
-       ps = c.prepareStatement(q, 1);
+        ps = c.prepareStatement(q);
        ps.setString(1, this.username);
        rs = ps.executeQuery();
 
@@ -281,14 +283,16 @@
      Utilizadores u = new Utilizadores();
      try {
        c = Utils.getConnectionStock();
-       String q = "select user_id from app_hist.utilizadores where password = ? and lower(username) = lower(?) ";
-       ps = c.prepareStatement(q, 1);
-       ps.setString(1, this.password);
-       ps.setString(2, this.username);
+        String q = "select user_id, password from app_hist.utilizadores where lower(username) = lower(?) ";
+        ps = c.prepareStatement(q);
+        ps.setString(1, this.username);
        rs = ps.executeQuery();
 
        while (rs.next()) {
-         u.setUser_id(rs.getInt(1));
+          String storedPassword = rs.getString(2);
+          if (this.passwordService.matches(this.password, storedPassword)) {
+            u.setUser_id(rs.getInt(1));
+          }
        }
        rs.close();
        ps.close();
@@ -324,8 +328,8 @@
        ps = c.prepareStatement(q);
        ps.setObject(1, this.username);
        ps.setObject(2, this.email);
-       ps.setObject(3, this.password);
-       ps.setObject(4, Character.valueOf(this.isAdmin));
+        ps.setObject(3, this.passwordService.encodeForStorage(this.password));
+        ps.setObject(4, this.isAdmin);
        ps.setObject(5, this.nome);
 
        if (ps.executeUpdate() > 0) {
@@ -337,7 +341,9 @@
 
        } 
      } catch (SQLException ex) {
-       c.rollback();
+        if (c != null) {
+          c.rollback();
+        }
        ex.printStackTrace();
      } finally {
        if (rs != null) {
@@ -374,14 +380,14 @@
        ps.setObject(2, this.email);
        int conta = 3;
        if (!"".equals(this.password)) {
-         ps.setObject(conta, this.password);
+          ps.setObject(conta, this.passwordService.encodeForStorage(this.password));
          conta++;
        } 
-       ps.setObject(conta, Character.valueOf(this.isAdmin));
+        ps.setObject(conta, this.isAdmin);
        conta++;
        ps.setObject(conta, this.nome);
        conta++;
-       ps.setObject(conta, Integer.valueOf(this.user_id));
+        ps.setObject(conta, this.user_id);
 
        ps.executeUpdate();
 
@@ -389,7 +395,9 @@
        c.commit();
      }
      catch (SQLException ex) {
-       c.rollback();
+        if (c != null) {
+          c.rollback();
+        }
        ex.printStackTrace();
      } finally {
        if (rs != null) {
@@ -417,7 +425,7 @@
        String q = "DELETE FROM app_hist.utilizadores  WHERE user_id = ?";
 
        ps = c.prepareStatement(q);
-       ps.setObject(1, Integer.valueOf(this.user_id));
+        ps.setObject(1, this.user_id);
 
        if (ps.executeUpdate() > 0) {
          rs = ps.getGeneratedKeys();
@@ -428,7 +436,9 @@
 
        } 
      } catch (SQLException ex) {
-       c.rollback();
+        if (c != null) {
+          c.rollback();
+        }
        ex.printStackTrace();
      } finally {
        if (rs != null) {

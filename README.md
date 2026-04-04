@@ -39,6 +39,34 @@ Nova base criada:
 
 A estrutura antiga (`pt.ual.dao`, `pt.ual.views`, `pt.ual.utils`) permanece ativa para compatibilidade nesta fase.
 
+### Fundação de autenticação backend
+
+Foi introduzida uma base de autenticação no backend para permitir que o frontend deixe de fazer hashing/comparação de passwords.
+
+Endpoints base disponíveis:
+
+- `POST /CircPeticionario/webresources/auth/login`
+- `GET /CircPeticionario/webresources/auth/me`
+- `POST /CircPeticionario/webresources/auth/logout`
+
+Decisão técnica atual:
+
+- a autenticação é centralizada no backend;
+- o login usa a password em texto claro recebida do frontend e o backend faz a validação com hash no servidor;
+- a sessão autenticada fica guardada no `HttpSession`;
+- os endpoints legados continuam disponíveis e o token legado `TOKEN_SERVICE` mantém-se para as rotas antigas.
+
+Contrato esperado para o frontend:
+
+- enviar `username` e `password` em texto claro para `POST /CircPeticionario/webresources/auth/login`;
+- usar `withCredentials: true` nas chamadas HTTP que dependem da sessão;
+- chamar `GET /CircPeticionario/webresources/auth/me` para obter o utilizador autenticado;
+- chamar `POST /CircPeticionario/webresources/auth/logout` para invalidar a sessão.
+
+Isto permite migrar o frontend Angular de forma incremental, sem exigir hashing no cliente.
+
+> Nota: nesta branch a implementação do hash foi mantida sem dependências externas para garantir compatibilidade imediata com o build do backend; a substituição por uma biblioteca bcrypt dedicada pode ser feita numa iteração futura sem alterar o contrato HTTP.
+
 ## Pré-requisitos
 
 - Docker Desktop ou Podman Desktop instalado
