@@ -8,7 +8,7 @@ import { UltramarComponent as HomeUltramarComponent } from './ultramar/ultramar.
 import { RespostasComponent as HomeRespostasComponent } from './respostas/respostas.component';
 export const homeRoutes: Routes = [
   {
-    path: 'inicio',
+    path: 'home',
     component: HomeLayoutComponent,
     children: [
       { path: '', component: HomeInicioComponent },

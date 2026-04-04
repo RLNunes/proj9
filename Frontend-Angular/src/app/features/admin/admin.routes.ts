@@ -28,8 +28,7 @@ export const adminRoutes: Routes = [
     path: 'admin',
     component: AdminLayoutComponent,
     children: [
-      { path: '', redirectTo: 'inicio', pathMatch: 'full' },
-      { path: 'inicio', component: AdminInicioComponent },
+      { path: '', component: AdminInicioComponent },
       {
         path: 'toponimia',
         children: [

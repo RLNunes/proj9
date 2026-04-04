@@ -2,6 +2,23 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.23.
 
+## Routing architecture (incremental migration)
+
+The frontend uses domain-based routing with a global shell and per-domain layouts.
+
+- Public domain technical name: `home`
+- Public label shown to users: `Pagina Inicial`
+- Homepage title: `Página Inicial`
+
+Current base routes:
+
+- `/` -> redirect to `/home`
+- `/home` (+ `/home/provocacao`, `/home/mandado`, `/home/consulta`, `/home/ultramar`, `/home/respostas`)
+- `/admin` (+ domain child routes)
+- `/consulta` (+ domain child routes)
+
+No `/inicio` compatibility redirects are currently configured.
+
 ## Development server
 
 To start a local development server, run:

@@ -9,7 +9,7 @@ import { NavigationCard } from '../../../shared/models/navigation-card.model';
 })
 export class ConsultaLayoutComponent {
   navLinks: NavigationCard[] = [
-    { label: 'Início', description: 'Página inicial da consulta', link: '/consulta/inicio' },
+    { label: 'Pagina Inicial', description: 'Página inicial da consulta', link: '/consulta' },
     { label: 'Pessoa', description: 'Pesquisa por pessoa', link: '/consulta/pessoa' },
     { label: 'Tema', description: 'Pesquisa por tema', link: '/consulta/tema' },
     { label: 'Palavra-Chave', description: 'Pesquisa por palavra-chave', link: '/consulta/palavra-chave' },

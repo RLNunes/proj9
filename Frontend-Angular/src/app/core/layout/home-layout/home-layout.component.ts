@@ -9,11 +9,11 @@ import { NavigationCard } from '../../../shared/models/navigation-card.model';
 })
 export class HomeLayoutComponent {
   cards: NavigationCard[] = [
-    { label: 'Início', description: 'Página inicial', link: '/inicio' },
-    { label: 'Provocação', description: 'Área de provocação', link: '/inicio/provocacao' },
-    { label: 'Mandado', description: 'Área de mandados', link: '/inicio/mandado' },
-    { label: 'Consulta', description: 'Consulta pública', link: '/inicio/consulta' },
-    { label: 'Ultramar', description: 'Conteúdo ultramarino', link: '/inicio/ultramar' },
-    { label: 'Respostas', description: 'Respostas e seguimento', link: '/inicio/respostas' },
+    { label: 'Pagina Inicial', description: 'Página inicial', link: '/home' },
+    { label: 'Provocação', description: 'Área de provocação', link: '/home/provocacao' },
+    { label: 'Mandado', description: 'Área de mandados', link: '/home/mandado' },
+    { label: 'Consulta', description: 'Consulta pública', link: '/home/consulta' },
+    { label: 'Ultramar', description: 'Conteúdo ultramarino', link: '/home/ultramar' },
+    { label: 'Respostas', description: 'Respostas e seguimento', link: '/home/respostas' },
   ];
 }

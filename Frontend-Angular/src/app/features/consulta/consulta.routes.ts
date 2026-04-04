@@ -9,8 +9,7 @@ export const consultaRoutes: Routes = [
     path: 'consulta',
     component: ConsultaLayoutComponent,
     children: [
-      { path: '', redirectTo: 'inicio', pathMatch: 'full' },
-      { path: 'inicio', component: ConsultaInicioComponent },
+      { path: '', component: ConsultaInicioComponent },
       { path: 'pessoa', component: PessoaComponent },
       { path: 'tema', component: TemaComponent },
       { path: 'palavra-chave', component: PalavraChaveComponent },

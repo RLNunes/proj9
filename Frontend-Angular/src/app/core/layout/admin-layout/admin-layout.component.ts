@@ -10,7 +10,7 @@ import { NavigationCard } from '../../../shared/models/navigation-card.model';
 })
 export class AdminLayoutComponent {
   navLinks: NavigationCard[] = [
-    { label: 'Início', description: 'Página inicial do domínio', link: '/admin/inicio' },
+    { label: 'Pagina Inicial', description: 'Página inicial do domínio', link: '/admin' },
     { label: 'Toponímia', description: 'Gestão de toponímia', link: '/admin/toponimia' },
     { label: 'Marcadores', description: 'Marcadores temáticos', link: '/admin/marcadores' },
     { label: 'Ofícios-Títulos', description: 'Ofícios e títulos', link: '/admin/oficios-titulos' },

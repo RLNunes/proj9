@@ -5,11 +5,11 @@ import { adminRoutes } from './features/admin/admin.routes';
 import { consultaRoutes } from './features/consulta/consulta.routes';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'inicio' },
+  { path: '', pathMatch: 'full', redirectTo: 'home' },
   {
     path: '',
     component: ShellComponent,
     children: [...homeRoutes, ...adminRoutes, ...consultaRoutes],
   },
-  { path: '**', redirectTo: 'inicio' },
+  { path: '**', redirectTo: 'home' },
 ];
