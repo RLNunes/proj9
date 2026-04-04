@@ -24,6 +24,21 @@ Browser → Nginx → Payara → PostgreSQL
 | `nginx/default.conf` | Configuração Nginx (SPA fallback + proxy `/api`) |
 | `CircPeticionario-Compose.yaml` | Orquestração Docker Compose |
 
+## Fundação estrutural backend (incremental)
+
+No backend Java (`CircPeticionario-WebApp`) foi introduzida uma base de packages para evolução incremental, sem remover a estrutura legada atual.
+
+Nova base criada:
+
+- `pt.ual.config`
+- `pt.ual.common`
+- `pt.ual.auth`
+- `pt.ual.home.{resource,service,repository,dto,model}`
+- `pt.ual.admin.{resource,service,repository,dto,model}`
+- `pt.ual.consulta.{resource,service,repository,dto,model}`
+
+A estrutura antiga (`pt.ual.dao`, `pt.ual.views`, `pt.ual.utils`) permanece ativa para compatibilidade nesta fase.
+
 ## Pré-requisitos
 
 - Docker Desktop ou Podman Desktop instalado
