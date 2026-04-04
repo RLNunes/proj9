@@ -39,7 +39,7 @@ export const adminRoutes: Routes = [
           { path: 'capitania', component: CapitaniaComponent },
         ],
       },
-      { path: 'registro', component: RegistoComponent },
+      { path: 'registo', component: RegistoComponent },
       { path: 'referencia-documental', component: ReferenciaDocumentalComponent },
       {
         path: 'marcadores',
