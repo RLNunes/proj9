@@ -1,0 +1,16 @@
+﻿import { Component, Input } from '@angular/core';
+import {FilterFormComponent} from './filter-form/filter-form.component';
+import {Button} from 'primeng/button';
+
+@Component({
+  selector: 'app-provocacao',
+  templateUrl: 'provocacao.component.html',
+  imports: [
+    FilterFormComponent,
+    Button
+  ],
+})
+export class ProvocacaoComponent{
+  @Input() title!: string
+}
+
