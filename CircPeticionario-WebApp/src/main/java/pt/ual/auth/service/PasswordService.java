@@ -34,10 +34,22 @@ public class PasswordService {
     String normalized = storedPassword.trim();
     if (isBcryptHash(normalized)) {
       try {
-        return BCrypt.checkpw(rawPassword, normalized);
+        if (BCrypt.checkpw(rawPassword, normalized)) {
+          return true;
+        }
       } catch (IllegalArgumentException ex) {
-        return false;
+        // Fallback below handles legacy bcrypt revisions when needed.
       }
+
+      String compatibleHash = toJbcryptCompatibleHash(normalized);
+      if (!compatibleHash.equals(normalized)) {
+        try {
+          return BCrypt.checkpw(rawPassword, compatibleHash);
+        } catch (IllegalArgumentException ex) {
+          return false;
+        }
+      }
+      return false;
     }
     if (isPbkdf2Hash(normalized)) {
       String[] parts = normalized.split("\\$");
@@ -80,5 +92,15 @@ public class PasswordService {
       result |= a[i] ^ b[i];
     }
     return result == 0;
+  }
+
+  private String toJbcryptCompatibleHash(String hash) {
+    if (hash == null || hash.length() < 4) {
+      return hash;
+    }
+    if (hash.startsWith("$2b$") || hash.startsWith("$2y$")) {
+      return "$2a$" + hash.substring(4);
+    }
+    return hash;
   }
 }

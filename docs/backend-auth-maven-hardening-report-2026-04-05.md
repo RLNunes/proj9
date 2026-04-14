@@ -82,14 +82,32 @@ Estado tecnico relevante encontrado no backend:
   1. bcrypt (`$2a/$2b/$2y`),
   2. PBKDF2 legado (`PBKDF2$...`),
   3. fallback plaintext legado (compatibilidade incremental).
-- `encodeForStorage(password)` preserva hashes ja existentes (bcrypt ou PBKDF2) e so gera novo hash quando necessario.
+- `encodeForStorage(password)` preserva hashes já existentes (bcrypt ou PBKDF2) e so gera novo hash quando necessario.
 - Adicionado metodo `isBcryptHash(...)`.
+- Adicionado fallback de compatibilidade para verificacao bcrypt legado (`$2b$/$2y$` -> verificacao equivalente em `$2a$` quando necessario).
 - Removidos campos de salt aleatorio que eram usados no fluxo anterior de PBKDF2 como estrategia primaria.
 
 **Por que:**
 - backend passa a ser dono da validacao/hash de passwords;
 - mantem coexistencia com dados legados sem migracao massiva imediata;
 - evita regressao de login em contas antigas durante transicao.
+
+### 3.3 O que já funcionava e foi necessario ajustar
+
+#### O que funcionava no legado
+- O login legado (Node/frontend antigo) **ja validava password com bcrypt**.
+- O endpoint `GET /utilizadores/exist/{username}` apenas devolvia dados do utilizador (incluindo hash), nao autenticava sessao.
+- A comparacao era feita no cliente/Node via `bcrypt.compare(...)` contra hash armazenado na BD.
+
+#### Porque o novo endpoint falhou inicialmente
+- Ao migrar a validacao para backend Java (`POST /auth/login`), a comparacao passou a ser feita por `PasswordService`.
+- Em runtime, o utilizador era encontrado, mas a validacao server-side retornava falha (`/utilizadores/passValidate` devolvia `0`), levando `auth/login` a `401`.
+- A causa observada foi incompatibilidade de verificacao entre hashes bcrypt legados (`$2b$`) e a biblioteca usada no backend Java em alguns cenarios.
+
+#### Porque esta implementacao era necessaria
+- Objetivo da fase: remover do frontend a responsabilidade de hashing/comparacao.
+- Para manter migracao incremental sem reset de passwords, era necessario suportar hashes ja existentes na BD.
+- A solucao adotada foi compatibilidade de verificacao no backend (fallback controlado), sem alterar contrato HTTP nem runtime Payara.
 
 ---
 
@@ -137,6 +155,19 @@ Pop-Location
   - `jackson-databind:2.18.6`
   - `jackson-core:2.18.6`
   - `jackson-annotations:2.18.6`
+
+### Validacao funcional de autenticacao (runtime)
+- `GET /api/CircPeticionario/webresources/utilizadores/exist/{username}` com token real -> **200** e utilizador encontrado.
+- `POST /api/CircPeticionario/webresources/utilizadores/passValidate` com password valida:
+  - antes do ajuste de compatibilidade -> **200** com body `0` (falha de comparacao);
+  - apos ajuste -> **200** com body `15` (user_id autenticado).
+- `POST /api/CircPeticionario/webresources/auth/login`:
+  - antes do ajuste -> **401**;
+  - apos ajuste -> **200** com `Set-Cookie: JSESSIONID=...` e `AuthUserDto`.
+
+### Nota de teste importante
+- Chamadas para `http://localhost/webresources/...` sem prefixo `/api/CircPeticionario` podem devolver `200` do frontend (HTML), criando falso positivo de endpoint.
+- Endpoints legados com header `token` exigem o valor real configurado em JNDI; `TOKEN_SERVICE` literal devolve `401`.
 
 ### CVE check
 - Validacao de CVEs para Jackson atualizado -> **sem CVEs conhecidas** no conjunto validado.
@@ -190,4 +221,3 @@ Nota de trabalho local:
 
 ## 9) Resumo executivo
 Foi concluida uma ronda de hardening incremental no backend que resolve falhas de build no ecossistema Maven moderno, fortalece o stack de autenticacao com bcrypt no servidor e normaliza a gestao de dependencias Jackson com BOM, mantendo compatibilidade temporaria com legado e sem alterar o runtime Payara.
-
