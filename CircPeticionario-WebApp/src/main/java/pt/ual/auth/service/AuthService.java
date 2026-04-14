@@ -8,7 +8,6 @@ import pt.ual.auth.dto.AuthLoginRequestDto;
 import pt.ual.auth.dto.AuthUserDto;
 import pt.ual.auth.model.AuthUser;
 import pt.ual.auth.repository.AuthRepository;
-import pt.ual.auth.service.PasswordService;
 
 @ApplicationScoped
 public class AuthService {
