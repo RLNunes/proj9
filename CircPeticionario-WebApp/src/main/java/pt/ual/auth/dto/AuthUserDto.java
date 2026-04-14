@@ -1,5 +1,8 @@
 package pt.ual.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthUserDto {
   private int userId;
   private String username;
@@ -47,4 +50,3 @@ public class AuthUserDto {
     this.admin = admin;
   }
 }
-
