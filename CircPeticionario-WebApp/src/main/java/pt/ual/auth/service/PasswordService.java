@@ -1,7 +1,9 @@
 package pt.ual.auth.service;
 
+import javax.enterprise.context.ApplicationScoped;
 import org.mindrot.jbcrypt.BCrypt;
 
+@ApplicationScoped
 public class PasswordService {
   private static final int BCRYPT_ROUNDS = 10;
 
