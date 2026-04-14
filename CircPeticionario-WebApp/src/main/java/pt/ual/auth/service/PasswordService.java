@@ -23,18 +23,24 @@ public class PasswordService {
     if (password == null) {
       return null;
     }
-    return (isBcryptHash(password) || isPbkdf2Hash(password)) ? password : hash(password);
+    String normalized = password.trim();
+    return (isBcryptHash(normalized) || isPbkdf2Hash(normalized)) ? normalized : hash(normalized);
   }
 
   public boolean matches(String rawPassword, String storedPassword) {
     if (rawPassword == null || storedPassword == null) {
       return false;
     }
-    if (isBcryptHash(storedPassword)) {
-      return BCrypt.checkpw(rawPassword, storedPassword);
+    String normalized = storedPassword.trim();
+    if (isBcryptHash(normalized)) {
+      try {
+        return BCrypt.checkpw(rawPassword, normalized);
+      } catch (IllegalArgumentException ex) {
+        return false;
+      }
     }
-    if (isPbkdf2Hash(storedPassword)) {
-      String[] parts = storedPassword.split("\\$");
+    if (isPbkdf2Hash(normalized)) {
+      String[] parts = normalized.split("\\$");
       if (parts.length != 4) {
         return false;
       }
@@ -52,7 +58,7 @@ public class PasswordService {
   }
 
   public boolean isBcryptHash(String value) {
-    return value != null && value.matches("^\\$2[aby]\\$\\d{2}\\$.*");
+    return value != null && value.matches("^\\$2[aby]\\$\\d{2}\\$[./A-Za-z0-9]{53}$");
   }
 
   private byte[] deriveKey(char[] password, byte[] salt, int iterations, int keyLength) {

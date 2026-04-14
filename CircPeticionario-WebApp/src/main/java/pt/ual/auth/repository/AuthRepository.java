@@ -25,7 +25,7 @@ public class AuthRepository {
         user.setEmail(rs.getString("email"));
         user.setPasswordHash(rs.getString("password"));
         String adminValue = rs.getString("admin");
-        user.setAdmin(adminValue != null && adminValue.length() > 0 ? adminValue.charAt(0) : '\0');
+        user.setAdmin(adminValue != null && !adminValue.isEmpty() ? adminValue.charAt(0) : '\0');
         user.setNome(rs.getString("nome"));
       }
     } finally {
@@ -60,7 +60,7 @@ public class AuthRepository {
         user.setEmail(rs.getString("email"));
         user.setPasswordHash(rs.getString("password"));
         String adminValue = rs.getString("admin");
-        user.setAdmin(adminValue != null && adminValue.length() > 0 ? adminValue.charAt(0) : '\0');
+        user.setAdmin(adminValue != null && !adminValue.isEmpty() ? adminValue.charAt(0) : '\0');
         user.setNome(rs.getString("nome"));
       }
     } finally {
