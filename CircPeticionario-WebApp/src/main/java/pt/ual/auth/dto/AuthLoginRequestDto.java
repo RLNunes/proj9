@@ -6,9 +6,9 @@ import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AuthLoginRequestDto {
 
   @NotBlank
