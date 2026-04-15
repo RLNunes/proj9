@@ -9,14 +9,14 @@ public class PasswordService {
 
   public String hash(String rawPassword) {
     if (rawPassword == null || rawPassword.isEmpty()) {
-      return null;
+      throw new IllegalArgumentException("Password cannot be null or empty.");
     }
     return BCrypt.hashpw(rawPassword, BCrypt.gensalt(BCRYPT_ROUNDS));
   }
 
   public String encodeForStorage(String password) {
     if (password == null || password.isEmpty()) {
-      return null;
+      throw new IllegalArgumentException("Password cannot be null or empty.");
     }
     return isBcryptHash(password) ? password : hash(password);
   }
