@@ -28,10 +28,27 @@ public class CORSFilter implements ContainerResponseFilter {
 
         if (origin != null && ALLOWED_ORIGINS.contains(origin)) {
             responseContext.getHeaders().putSingle("Access-Control-Allow-Origin", origin);
-            responseContext.getHeaders().putSingle("Vary", "Origin");
+            appendVaryHeader(responseContext, "Origin");
             responseContext.getHeaders().putSingle("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            responseContext.getHeaders().putSingle("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
+            responseContext.getHeaders().putSingle(
+                    "Access-Control-Allow-Headers",
+                    "origin, content-type, accept, authorization, token"
+            );
             responseContext.getHeaders().putSingle("Access-Control-Allow-Credentials", "true");
+        }
+    }
+
+    private void appendVaryHeader(ContainerResponseContext responseContext, String value) {
+        Object existing = responseContext.getHeaders().getFirst("Vary");
+
+        if (existing == null) {
+            responseContext.getHeaders().putSingle("Vary", value);
+            return;
+        }
+
+        String vary = existing.toString();
+        if (!vary.contains(value)) {
+            responseContext.getHeaders().putSingle("Vary", vary + ", " + value);
         }
     }
 }
