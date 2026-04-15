@@ -1,19 +1,22 @@
- package pt.ual.utils;
- import java.util.HashSet;
+package pt.ual.utils;
+
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
+import pt.ual.auth.resource.AuthResource;
 import pt.ual.views.*;
 
- @ApplicationPath("webresources")
- public class ApplicationConfig extends Application {
-   public Set<Class<?>> getClasses() {
-     Set<Class<?>> resources = new HashSet<>();
-     resources.add(CapitaniaService.class);
-     resources.add(ComarcaService.class);
-     resources.add(Conselheiros_consultaService.class);
+@ApplicationPath("webresources")
+public class ApplicationConfig extends Application {
+  public Set<Class<?>> getClasses() {
+    Set<Class<?>> resources = new HashSet<>();
+    resources.add(CapitaniaService.class);
+    resources.add(ComarcaService.class);
+    resources.add(AuthResource.class);
+    resources.add(Conselheiros_consultaService.class);
      resources.add(ConsultaService.class);
      resources.add(Destinatario_respostaService.class);
      resources.add(FreguesiaService.class);
@@ -45,7 +48,6 @@ import pt.ual.views.*;
      resources.add(Relac_pchave_ultramarService.class);
      resources.add(Relac_pcitadas_consultaService.class);
      resources.add(Relac_pcitadas_mandadoService.class);
-     resources.add(Relac_pcitadas_ultramarService.class);
      resources.add(Relac_pcitadas_ultramarService.class);
      resources.add(Relac_pcitadas_provocacaoService.class);
      resources.add(Relac_provocacao_provocacaoService.class);
@@ -113,6 +115,6 @@ import pt.ual.views.*;
      resources.add(Relac_secretario_conselho_consultaService.class);
      resources.add(Relac_secretario_conselho_ultramarService.class);
 
-     return resources;
-   }
- }
+    return resources;
+  }
+}
