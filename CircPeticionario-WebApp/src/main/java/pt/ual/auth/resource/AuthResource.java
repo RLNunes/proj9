@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import pt.ual.auth.dto.AuthLoginRequestDto;
 import pt.ual.auth.dto.AuthUserDto;
 import pt.ual.auth.service.AuthService;
+import pt.ual.common.dto.ApiErrorDto;
 
 @Path("auth")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -29,9 +30,10 @@ public class AuthResource {
   @Path("login")
   public Response login(@Valid AuthLoginRequestDto request, @Context HttpServletRequest httpRequest) throws Exception {
     Optional<AuthUserDto> authenticated = this.authService.authenticate(request);
+
     if (!authenticated.isPresent()) {
       return Response.status(Response.Status.UNAUTHORIZED)
-              .entity("{\"code\":\"AUTH_INVALID_CREDENTIALS\",\"message\":\"Credenciais inválidas.\"}")
+              .entity(new ApiErrorDto("AUTH_INVALID_CREDENTIALS", "Credenciais inválidas."))
               .build();
     }
 
@@ -54,7 +56,7 @@ public class AuthResource {
 
     if (user == null) {
       return Response.status(Response.Status.UNAUTHORIZED)
-              .entity("{\"code\":\"AUTH_NOT_AUTHENTICATED\",\"message\":\"Sessão inexistente ou expirada.\"}")
+              .entity(new ApiErrorDto("AUTH_NOT_AUTHENTICATED", "Sessão inexistente ou expirada."))
               .build();
     }
 
