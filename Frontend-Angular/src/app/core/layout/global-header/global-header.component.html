@@ -1,20 +1,29 @@
-﻿<header class="flex flex-row">
-  <div class="h-16 bg-yellow">
-    <a routerLink="/home" class="flex items-center gap-3 text-slate-900">
-      <div class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white ring-1 ring-slate-200">
-        <img src="assets/img/branding/marca-circuitos-oceanicos-logo-selo-azul.png" alt="Circuitos Oceânicos" class="h-8 w-8 object-contain" />
-      </div>
-      <div>
-        <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">Circuitos Oceânicos</p>
-        <p class="text-xs text-slate-500">Interface Angular</p>
-      </div>
-    </a>
-    <app-user-menu />
-  </div>
-</header>
+﻿<p-toolbar styleClass="border-none rounded-none px-4 py-2 bg-white">
+  <ng-template pTemplate="start">
+    <div class="flex items-center gap-6">
+      <a routerLink="/home" class="flex items-center gap-3 no-underline text-inherit">
+        <img
+          src="assets/img/branding/marca-circuitos-oceanicos-logo-selo-vermelho.png"
+          alt="Circuitos Oceânicos"
+          class="h-10 w-auto"
+        />
+      </a>
 
-<p-toolbar>
-  <ng-template #start>
+      <nav class="flex items-center gap-4 text-sm">
+        <a routerLink="/home">Início</a>
+        <a routerLink="/home/provocacao">Provocação</a>
+        <a routerLink="/home/mandado">Mandado</a>
+        <a routerLink="/home/consulta">Consulta</a>
+        <a routerLink="/home/ultramar">Ultramar</a>
+        <a routerLink="/home/respostas">Respostas</a>
+      </nav>
+    </div>
+  </ng-template>
 
+  <ng-template pTemplate="end">
+    <div class="flex items-center gap-2">
+      <p-avatar icon="pi pi-user" shape="circle"></p-avatar>
+      <i class="pi pi-chevron-down text-xs"></i>
+    </div>
   </ng-template>
 </p-toolbar>
