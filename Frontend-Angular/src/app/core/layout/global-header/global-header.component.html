@@ -1,8 +1,8 @@
-﻿<header class="border-b border-slate-200 bg-white/95 backdrop-blur">
-  <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+﻿<header class="flex flex-row">
+  <div class="h-16 bg-yellow">
     <a routerLink="/home" class="flex items-center gap-3 text-slate-900">
-      <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-sm font-bold text-white">
-        CO
+      <div class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white ring-1 ring-slate-200">
+        <img src="assets/img/branding/marca-circuitos-oceanicos-logo-selo-azul.png" alt="Circuitos Oceânicos" class="h-8 w-8 object-contain" />
       </div>
       <div>
         <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">Circuitos Oceânicos</p>
@@ -12,3 +12,9 @@
     <app-user-menu />
   </div>
 </header>
+
+<p-toolbar>
+  <ng-template #start>
+
+  </ng-template>
+</p-toolbar>
