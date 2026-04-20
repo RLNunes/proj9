@@ -1,13 +1,12 @@
 ﻿import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ToolbarModule } from 'primeng/toolbar';
-import { AvatarModule } from 'primeng/avatar';
 import { HeaderStateService } from '../../services/header-state.service';
 import {UserMenuComponent} from '../user-menu/user-menu.component';
 
 @Component({
   selector: 'app-global-header',
-  imports: [RouterLink, ToolbarModule, AvatarModule, UserMenuComponent],
+  imports: [RouterLink, ToolbarModule, UserMenuComponent],
   templateUrl: './global-header.component.html',
 })
 export class GlobalHeaderComponent {
