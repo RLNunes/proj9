@@ -78,21 +78,21 @@ const HOME_HEADER_CONFIG: HeaderDomainConfig = {
   domain: 'home',
   logo: 'assets/img/branding/marca-circuitos-oceanicos-logo-selo-vermelho.png',
   label: 'Página Inicial',
-  nav: HOME_HEADER_NAV,
+  navItems: HOME_HEADER_NAV,
 };
 
 const ADMIN_HEADER_CONFIG: HeaderDomainConfig = {
   domain: 'admin',
   logo: 'assets/img/branding/marca-circuitos-oceanicos-logo-selo-azul.png',
   label: 'Administração',
-  nav: ADMIN_HEADER_NAV,
+  navItems: ADMIN_HEADER_NAV,
 };
 
 const CONSULTA_HEADER_CONFIG: HeaderDomainConfig = {
   domain: 'consulta',
   logo: 'assets/img/branding/marca-circuitos-oceanicos-logo-selo-verde.png',
   label: 'Consulta',
-  nav: CONSULTA_HEADER_NAV,
+  navItems: CONSULTA_HEADER_NAV,
 };
 
 export const HEADER_CONFIG: Record<HeaderDomain, HeaderDomainConfig> = {

@@ -3,27 +3,25 @@
     <div class="flex items-center gap-6">
       <a routerLink="/home" class="flex items-center gap-3 no-underline text-inherit">
         <img
-          src="assets/img/branding/marca-circuitos-oceanicos-logo-selo-vermelho.png"
-          alt="Circuitos Oceânicos"
+          [src]="headerConfig().logo"
+          [alt]="headerConfig().label"
           class="h-10 w-auto"
         />
       </a>
 
-      <nav class="flex items-center gap-4 text-sm">
-        <a routerLink="/home">Início</a>
-        <a routerLink="/home/provocacao">Provocação</a>
-        <a routerLink="/home/mandado">Mandado</a>
-        <a routerLink="/home/consulta">Consulta</a>
-        <a routerLink="/home/ultramar">Ultramar</a>
-        <a routerLink="/home/respostas">Respostas</a>
-      </nav>
+      @if (headerConfig().displayNav) {
+        <nav class="flex items-center gap-4 text-sm">
+          @for (navItem of headerConfig().navItems; track navItem.label) {
+            <a [routerLink]="navItem.link" class="no-underline text-inherit">
+              {{ navItem.label }}
+            </a>
+          }
+        </nav>
+      }
     </div>
   </ng-template>
 
   <ng-template pTemplate="end">
-    <div class="flex items-center gap-2">
-      <p-avatar icon="pi pi-user" shape="circle"></p-avatar>
-      <i class="pi pi-chevron-down text-xs"></i>
-    </div>
+    <app-user-menu />
   </ng-template>
 </p-toolbar>

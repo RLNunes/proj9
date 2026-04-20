@@ -10,7 +10,7 @@ export interface HeaderDomainConfig {
   domain: HeaderDomain;
   logo: string;
   label: string;
-  nav: HeaderNavItem[];
+  navItems: HeaderNavItem[];
 }
 
 export interface HeaderConfig extends HeaderDomainConfig {
