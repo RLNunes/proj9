@@ -1,21 +1,23 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
+
 import { HEADER_CONFIG } from '../config/header.config';
 import {
   HeaderConfig,
   HeaderDomain,
   HeaderDomainConfig,
 } from '../models/header-config.model';
+import { AuthService } from '../auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HeaderStateService {
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
   private readonly currentUrl = signal(this.router.url);
-  private readonly isAuthenticated = signal(false);
 
   readonly currentDomain = computed<HeaderDomain>(() =>
     this.resolveDomain(this.currentUrl()),
@@ -25,7 +27,7 @@ export class HeaderStateService {
     const domain = this.currentDomain();
     const baseConfig = HEADER_CONFIG[domain];
     const url = this.currentUrl();
-    const authenticated = this.isAuthenticated();
+    const authenticated = this.authService.isAuthenticated();
 
     return this.buildHeaderConfig(baseConfig, url, authenticated);
   });
@@ -38,10 +40,6 @@ export class HeaderStateService {
       });
   }
 
-  setAuthenticated(isAuthenticated: boolean): void {
-    this.isAuthenticated.set(isAuthenticated);
-  }
-
   private buildHeaderConfig(
     baseConfig: HeaderDomainConfig,
     url: string,
@@ -50,7 +48,11 @@ export class HeaderStateService {
     return {
       ...baseConfig,
       displayNav: isAuthenticated,
-      displaySearchbar: this.resolveDisplaySearchbar(baseConfig.domain, url, isAuthenticated),
+      displaySearchbar: this.resolveDisplaySearchbar(
+        baseConfig.domain,
+        url,
+        isAuthenticated,
+      ),
     };
   }
 
