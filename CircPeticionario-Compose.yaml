@@ -34,8 +34,8 @@ services:
   # Payara
   payara:
     build:
-      context: ./Payara
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Payara/Dockerfile
     image: circ_peticionario_image_payara
     container_name: circ_peticionario_cnt_payara
     hostname: circ.peticionario.payara

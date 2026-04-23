@@ -17,3 +17,8 @@ export interface HeaderConfig extends HeaderDomainConfig {
   displayNav: boolean;
   displaySearchbar: boolean;
 }
+
+export interface UserDomainItem {
+  label: string;
+  link: string;
+}

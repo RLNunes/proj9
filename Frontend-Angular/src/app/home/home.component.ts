@@ -18,7 +18,7 @@ export class HomeComponent {
   pingApi(): void {
     this.apiMessage = '';
     this.apiError = '';
-    this.api.get<unknown>('CircPeticionario/webresources/').subscribe({
+    this.api.get<unknown>('CircPeticionario/webresources').subscribe({
       next: (res) => {
         this.apiMessage = 'API respondeu: ' + JSON.stringify(res);
       },

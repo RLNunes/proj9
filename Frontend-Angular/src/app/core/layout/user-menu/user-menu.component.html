@@ -2,10 +2,44 @@
   type="button"
   class="flex items-center gap-2"
   aria-label="Abrir área do utilizador"
-  (click)="onAvatarClick()"
+  (click)="onAvatarClick($event)"
 >
   <p-avatar icon="pi pi-user" shape="circle"></p-avatar>
-  <i class="pi pi-chevron-down text-xs"></i>
+  @if(isAuthenticated()){
+    <i class="pi pi-chevron-down text-xs"></i>
+  }
 </button>
+
+<!-- dropdown -->
+@if (isAuthenticated()) {
+  <p-popover #op [dismissable]="true" styleClass="p-0">
+    <div class="flex flex-col min-w-36">
+
+      @for (domain of dropdownDomains(); track domain.link) {
+        <button
+          type="button"
+          pRipple
+          class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-none bg-transparent cursor-pointer text-left w-full"
+          (click)="navigateTo(domain.link)"
+        >
+          {{ domain.label }}
+        </button>
+      }
+
+      @if (dropdownDomains().length > 0) {
+        <hr class="my-1 border-gray-200 mx-0" />
+      }
+
+      <button
+        type="button"
+        pRipple
+        class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-none bg-transparent cursor-pointer text-left w-full"
+        (click)="logout()"
+      >
+        Sair
+      </button>
+    </div>
+  </p-popover>
+}
 
 <app-login-modal />
