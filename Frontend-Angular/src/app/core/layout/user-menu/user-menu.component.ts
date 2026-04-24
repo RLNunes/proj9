@@ -25,9 +25,6 @@ export class UserMenuComponent {
   readonly dropdownDomains = this.headerStateService.dropdownDomains;
 
   onAvatarClick(event: MouseEvent): void {
-    // se não autenticado
-    //this.loginModal?.open();
-
     if (this.isAuthenticated()) {
       this.overlayPanel?.toggle(event);
     } else {
