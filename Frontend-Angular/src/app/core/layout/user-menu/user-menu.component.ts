@@ -21,7 +21,6 @@ export class UserMenuComponent {
   private readonly router = inject(Router);
 
   readonly isAuthenticated = this.authService.isAuthenticated;
-  readonly currentUser = this.authService.currentUser;
   readonly dropdownDomains = this.headerStateService.dropdownDomains;
 
   onAvatarClick(event: MouseEvent): void {
