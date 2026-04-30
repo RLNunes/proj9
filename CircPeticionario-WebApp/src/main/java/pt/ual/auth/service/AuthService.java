@@ -13,14 +13,11 @@ import pt.ual.auth.repository.AuthRepository;
 public class AuthService {
   public static final String SESSION_ATTRIBUTE = "AUTH_USER";
 
-  private final AuthRepository authRepository;
-  private final PasswordService passwordService;
+  @Inject
+  private AuthRepository authRepository;
 
   @Inject
-  public AuthService(AuthRepository authRepository, PasswordService passwordService) {
-    this.authRepository = authRepository;
-    this.passwordService = passwordService;
-  }
+  private PasswordService passwordService;
 
   public Optional<AuthUserDto> authenticate(AuthLoginRequestDto request) throws Exception {
     if (request == null) {

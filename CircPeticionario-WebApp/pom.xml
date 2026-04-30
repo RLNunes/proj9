@@ -15,7 +15,7 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <jakartaee>8.0</jakartaee>
 		<nameWar>CircPeticionario</nameWar>
-		<jackson.version>2.18.6</jackson.version>
+		<jackson.version>2.13.5</jackson.version>
     </properties>
     
     <dependencyManagement>
