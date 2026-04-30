@@ -4,7 +4,7 @@ import { adminRoutes } from './features/admin/admin.routes';
 import { consultaRoutes } from './features/consulta/consulta.routes';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'home' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: '',
     children: [...homeRoutes, ...adminRoutes, ...consultaRoutes],
