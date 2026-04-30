@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ApiService {
-  private readonly apiBase = '/api/CircPeticionario/webresources/';
+  private readonly apiBase = '/api/CircPeticionario/webresources';
 
   constructor(private http: HttpClient) {}
 
