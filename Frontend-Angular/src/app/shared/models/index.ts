@@ -1,1 +1,1 @@
-export * from './filter-field-config.model'
+export * from './filter-form.model'
