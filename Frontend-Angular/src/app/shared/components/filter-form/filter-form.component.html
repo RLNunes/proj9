@@ -1,7 +1,0 @@
-<form [formGroup]="filterForm" class="p-fluid p-formgrid p-grid">
-  <input type="text" pInputText [placeholder]="placeholder" formControlName="searchTerm" />
-  <p-select [placeholder]="optionsPlaceholder" [options]="themeOptions"></p-select>
-  <p-select placeholder="Palavra Chave"></p-select>
-  <p-button icon="pi pi-search" label="Filtrar" severity="info" (onClick)="handleFilterClick()"></p-button>
-  <p-button label="Limpar" severity="danger" (onClick)="handleClearFilter()"></p-button>
-</form>
