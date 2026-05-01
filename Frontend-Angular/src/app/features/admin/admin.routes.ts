@@ -1,5 +1,4 @@
 ﻿import { Routes } from '@angular/router';
-import { AdminLayoutComponent } from '../../core/layout/admin-layout/admin-layout.component';
 import { InicioComponent as AdminInicioComponent } from './inicio/inicio.component';
 import { ToponimiaHomeComponent } from './toponimia/pages/toponimia-home/toponimia-home.component';
 import { TermoComponent } from './toponimia/termo/termo.component';
@@ -23,10 +22,11 @@ import { TemaComponent } from './temas/tema/tema.component';
 import { AgregadoresComponent as TemasAgregadoresComponent } from './temas/agregadores/agregadores.component';
 import { PalavraChaveComponent } from './palavra-chave/palavra-chave.component';
 import { UtilizadorComponent } from './utilizador/utilizador.component';
+import { AdminDomainShellComponent } from '../../core/layout';
 export const adminRoutes: Routes = [
   {
     path: 'admin',
-    component: AdminLayoutComponent,
+    component: AdminDomainShellComponent,
     children: [
       { path: '', component: AdminInicioComponent },
       {
