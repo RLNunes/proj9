@@ -1,1 +1,20 @@
-﻿<p>provocacao works!</p>
+﻿<app-entity-page-layout class="flex flex-col items-center gap-6 px-20">
+  <app-page-title page-header title="Provocação"></app-page-title>
+  <app-generic-filter-form
+    class="flex flex-col w-full items-center gap-4"
+    page-filters
+    title="Filtro"
+    [fields]="filtersFields"
+    (search)="OnSearch($event)"
+    (clear)="OnClear()">
+  </app-generic-filter-form>
+
+  <p-button
+    page-actions
+    class="self-start"
+    icon="pi pi-plus"
+    [raised]="true"
+    label="Criar Provocação">
+  </p-button>
+
+</app-entity-page-layout>
