@@ -8,16 +8,22 @@ describe('PageTitleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PageTitleComponent]
-    })
-    .compileComponents();
+      imports: [PageTitleComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PageTitleComponent);
     component = fixture.componentInstance;
+    component.title = 'Page title';
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should render the title', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.textContent).toContain('Page title');
   });
 });
