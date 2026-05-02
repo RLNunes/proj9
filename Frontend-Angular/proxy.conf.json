@@ -5,7 +5,9 @@
     "changeOrigin": true,
     "pathRewrite": {
       "^/api": ""
+    },
+    "cookiePathRewrite": {
+      "/CircPeticionario": "/api/CircPeticionario"
     }
   }
 }
-
