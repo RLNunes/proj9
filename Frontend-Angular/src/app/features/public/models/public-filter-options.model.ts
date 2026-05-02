@@ -1,5 +1,3 @@
-import { FilterFieldOption } from '../../../shared/models';
-
 export interface ThemeApiResponse {
   allTemas: ThemeApiItem[];
   rowcount: number;
@@ -12,4 +10,15 @@ export interface ThemeApiItem {
   tema: string;
 }
 
-export type ThemeOption = FilterFieldOption;
+export interface KeywordApiResponse {
+  allPalChaves: KeywordApiItem[];
+  rowcount: number;
+  pageNum?: number;
+  rowsPage?: number;
+}
+
+export interface KeywordApiItem {
+  pk_palavra_chave: string;
+  palavra_chave: string;
+}
+

@@ -1,10 +1,15 @@
-﻿import {Component, DestroyRef, inject, OnInit} from '@angular/core';
-import {EntityPageLayoutComponent, GenericFilterFormComponent, PageTitleComponent} from '../../../shared/components';
+﻿import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import {
+  EntityPageLayoutComponent,
+  GenericFilterFormComponent,
+  PageTitleComponent,
+} from '../../../shared/components';
 
-import {FilterFieldForm, FilterFormValue} from '../../../shared/models';
-import {Button} from 'primeng/button';
-import {PublicFilterOptionsService} from '../services';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import { FilterFieldForm, FilterFormValue } from '../../../shared/models';
+import { ButtonModule } from 'primeng/button';
+
+import { PublicFilterOptionsService } from '../services';
 
 @Component({
   selector: 'app-provocacao',
@@ -13,10 +18,10 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
     EntityPageLayoutComponent,
     PageTitleComponent,
     GenericFilterFormComponent,
-    Button
+    ButtonModule
   ]
 })
-export class ProvocacaoComponent implements OnInit{
+export class ProvocacaoComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly publicFilterOptionsService = inject(PublicFilterOptionsService);
 
@@ -38,7 +43,7 @@ export class ProvocacaoComponent implements OnInit{
     },
     {
       type: 'select',
-      label: 'Palavra Chave',
+      label: 'Palavra-Chave',
       key: 'palavraChave',
       extraOptions: {
         editable: true,
@@ -50,6 +55,7 @@ export class ProvocacaoComponent implements OnInit{
 
   ngOnInit(): void {
     this.loadThemeOptions();
+    this.loadKeywordOptions();
   }
 
   onSearch(filters: FilterFormValue): void {
@@ -69,6 +75,21 @@ export class ProvocacaoComponent implements OnInit{
           this.filterFields = this.filterFields.map((field) =>
             field.key === 'tema'
               ? { ...field, options: themeOptions }
+              : field,
+          );
+        },
+      });
+  }
+
+  private loadKeywordOptions(): void {
+    this.publicFilterOptionsService
+      .getKeywordOptions()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (keywordOptions) => {
+          this.filterFields = this.filterFields.map((field) =>
+            field.key === 'palavraChave'
+              ? { ...field, options: keywordOptions }
               : field,
           );
         },
