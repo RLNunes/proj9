@@ -11,7 +11,7 @@ import { ButtonModule } from 'primeng/button';
 
 import { PublicFilterOptionsService } from '../services';
 import {ProvocacaoService} from './services';
-import {Provocacao} from './models';
+import {Provocacao, ProvocacaoSearchFilters} from './models';
 import {TableLazyLoadEvent, TableModule} from 'primeng/table';
 
 @Component({
@@ -60,6 +60,8 @@ export class ProvocacaoComponent implements OnInit {
   currentPage = 0;
   rowsPage = 10;
   loading = false;
+  isFiltering = false;
+  searchWarningMessage = '';
 
   ngOnInit(): void {
     this.loadThemeOptions();
@@ -69,6 +71,7 @@ export class ProvocacaoComponent implements OnInit {
 
   private loadProvocacoes(pageNum = 1, rowsPage = this.rowsPage): void {
     this.loading = true;
+    this.isFiltering = false;
 
     this.provocacaoService
       .getProvocacoes(pageNum, rowsPage)
@@ -101,11 +104,60 @@ export class ProvocacaoComponent implements OnInit {
   }
 
   onSearch(filters: FilterFormValue): void {
-    console.log('Provocação filters:', filters);
+    const pessoa = String(filters['pessoa'] ?? '').trim();
+    const tema = Number(filters['tema'] ?? 0);
+    const palavraChave = Number(filters['palavraChave'] ?? 0);
+
+    const searchFilters: ProvocacaoSearchFilters = {
+      search: 'all',
+      pessoa: pessoa || 'all',
+      tema,
+      palavraChave,
+    };
+
+    const hasFilters =
+      searchFilters.pessoa !== 'all' ||
+      searchFilters.tema !== 0 ||
+      searchFilters.palavraChave !== 0;
+
+    if (!hasFilters) {
+      this.onClear();
+      return;
+    }
+
+    this.loading = true;
+    this.isFiltering = true;
+    this.searchWarningMessage = '';
+
+    this.provocacaoService
+      .searchProvocacoes(searchFilters)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (provocacoes) => {
+          this.provocacoes = provocacoes;
+          this.totalRecords = provocacoes.length;
+          this.loading = false;
+
+          if (provocacoes.length > this.rowsPage) {
+            this.searchWarningMessage =
+              'Esta pesquisa devolveu muitos valores. Por favor, refine a pesquisa para obter menos resultados.';
+          }
+        },
+        error: (error) => {
+          console.error('Error searching provocacoes', error);
+          this.provocacoes = [];
+          this.totalRecords = 0;
+          this.loading = false;
+        },
+      });
   }
 
   onClear(): void {
-    console.log('Provocação filters cleared');
+    this.isFiltering = false;
+    this.searchWarningMessage = '';
+    this.currentPage = 1;
+
+    this.loadProvocacoes(1, this.rowsPage);
   }
 
   private loadThemeOptions(): void {

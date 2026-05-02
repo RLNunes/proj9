@@ -21,13 +21,19 @@
     label="Criar Provocação">
   </p-button>
 
+  @if (searchWarningMessage) {
+    <p class="text-sm text-orange-600">
+      {{ searchWarningMessage }}
+    </p>
+  }
+
   <section page-content class="w-full">
     <p-table
       [value]="provocacoes"
-      [paginator]="true"
+      [paginator]="!isFiltering"
       [rows]="rowsPage"
       [totalRecords]="totalRecords"
-      [lazy]="true"
+      [lazy]="!isFiltering"
       [loading]="loading"
       [rowsPerPageOptions]="[10, 25, 50]"
       (onLazyLoad)="onPageChange($event)"
