@@ -21,4 +21,56 @@
     label="Criar Provocação">
   </p-button>
 
+  <section page-content class="w-full">
+    <p-table
+      [value]="provocacoes"
+      [tableStyle]="{ 'min-width': '70rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Editar</th>
+          <th>Nº</th>
+          <th>Destinatário Autoridade Tratamento</th>
+          <th>Resumo</th>
+          <th>Referência Documental</th>
+          <th>Pessoa<br />Citadas</th>
+          <th>Requerente</th>
+          <th>Palavra<br />Chave</th>
+          <th>Tema</th>
+          <th>Ano Provocação</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-provocacao>
+        <tr>
+          <td>
+            <p-button
+              icon="pi pi-pencil"
+              severity="secondary"
+              [text]="true"
+              (onClick)="onEdit(provocacao.id)">
+            </p-button>
+          </td>
+          <td>{{ provocacao.id }}</td>
+          <td>{{ provocacao.destinatarioAutoridadeTratamento }}</td>
+          <td>{{ provocacao.resumo }}</td>
+          <td>{{ provocacao.referenciaDocumental }}</td>
+          <td>{{ provocacao.pessoasCitadas }}</td>
+          <td>{{ provocacao.requerente }}</td>
+          <td>{{ provocacao.palavraChave }}</td>
+          <td>{{ provocacao.tema }}</td>
+          <td>{{ provocacao.ano }}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="10" class="text-center">
+            Sem provocações para apresentar.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+
 </app-entity-page-layout>

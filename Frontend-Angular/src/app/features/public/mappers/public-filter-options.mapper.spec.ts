@@ -1,6 +1,6 @@
 import { mapKeywordApiResponseToFilterOptions, mapThemeApiResponseToFilterOptions } from './public-filter-options.mapper';
 
-describe('public-filter-options.mapper', () => {
+describe('public-filter-options.mappers', () => {
   it('should map Tema API responses to filter options', () => {
     expect(
       mapThemeApiResponseToFilterOptions({

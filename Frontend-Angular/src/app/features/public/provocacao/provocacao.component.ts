@@ -10,6 +10,9 @@ import { FilterFieldForm, FilterFormValue } from '../../../shared/models';
 import { ButtonModule } from 'primeng/button';
 
 import { PublicFilterOptionsService } from '../services';
+import {ProvocacaoService} from './services';
+import {Provocacao} from './models';
+import {TableModule} from 'primeng/table';
 
 @Component({
   selector: 'app-provocacao',
@@ -18,13 +21,16 @@ import { PublicFilterOptionsService } from '../services';
     EntityPageLayoutComponent,
     PageTitleComponent,
     GenericFilterFormComponent,
-    ButtonModule
+    ButtonModule,
+    TableModule
   ]
 })
 export class ProvocacaoComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly publicFilterOptionsService = inject(PublicFilterOptionsService);
+  private readonly provocacaoService = inject(ProvocacaoService);
 
+  provocacoes: Provocacao[] = [];
   filterFields: FilterFieldForm[] = [
     {
       type: 'text',
@@ -56,6 +62,25 @@ export class ProvocacaoComponent implements OnInit {
   ngOnInit(): void {
     this.loadThemeOptions();
     this.loadKeywordOptions();
+    this.loadProvocacoes();
+  }
+
+  private loadProvocacoes(): void {
+    this.provocacaoService
+      .getProvocacoes()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (provocacoes) => {
+          this.provocacoes = provocacoes;
+        },
+        error: (error) => {
+          console.error('Error loading provocacoes', error);
+        },
+      });
+  }
+
+  onEdit(id: number): void {
+    console.log('Edit provocacao:', id);
   }
 
   onSearch(filters: FilterFormValue): void {
