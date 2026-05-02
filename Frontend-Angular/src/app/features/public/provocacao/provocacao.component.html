@@ -8,9 +8,9 @@
     class="flex flex-col w-full items-center gap-4"
     page-filters
     title="Filtro"
-    [fields]="filtersFields"
-    (search)="OnSearch($event)"
-    (clear)="OnClear()">
+    [fields]="filterFields"
+    (search)="onSearch($event)"
+    (clear)="onClear()">
   </app-generic-filter-form>
 
   <p-button
