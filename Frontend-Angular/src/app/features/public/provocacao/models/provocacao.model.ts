@@ -9,3 +9,8 @@ export interface Provocacao {
   tema: string;
   ano: string;
 }
+
+export interface ProvocacaoPage {
+  items: Provocacao[];
+  totalRecords: number;
+}

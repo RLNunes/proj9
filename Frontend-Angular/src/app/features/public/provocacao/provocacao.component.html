@@ -1,4 +1,4 @@
-﻿<app-entity-page-layout class="flex flex-col items-center gap-6 px-20">
+﻿<app-entity-page-layout class="flex flex-col items-center gap-6">
   <app-page-title
     class="text-6xl font-semibold"
     page-header
@@ -24,6 +24,13 @@
   <section page-content class="w-full">
     <p-table
       [value]="provocacoes"
+      [paginator]="true"
+      [rows]="rowsPage"
+      [totalRecords]="totalRecords"
+      [lazy]="true"
+      [loading]="loading"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      (onLazyLoad)="onPageChange($event)"
       [tableStyle]="{ 'min-width': '70rem' }"
     >
       <ng-template pTemplate="header">
@@ -33,9 +40,9 @@
           <th>Destinatário Autoridade Tratamento</th>
           <th>Resumo</th>
           <th>Referência Documental</th>
-          <th>Pessoa<br />Citadas</th>
+          <th>Pessoa Citadas</th>
           <th>Requerente</th>
-          <th>Palavra<br />Chave</th>
+          <th>Palavra Chave</th>
           <th>Tema</th>
           <th>Ano Provocação</th>
         </tr>
@@ -55,10 +62,10 @@
           <td>{{ provocacao.destinatarioAutoridadeTratamento }}</td>
           <td>{{ provocacao.resumo }}</td>
           <td>{{ provocacao.referenciaDocumental }}</td>
-          <td>{{ provocacao.pessoasCitadas }}</td>
+          <td [innerHTML]="provocacao.pessoasCitadas"></td>
           <td>{{ provocacao.requerente }}</td>
-          <td>{{ provocacao.palavraChave }}</td>
-          <td>{{ provocacao.tema }}</td>
+          <td [innerHTML]="provocacao.palavraChave"></td>
+          <td [innerHTML]="provocacao.tema"></td>
           <td>{{ provocacao.ano }}</td>
         </tr>
       </ng-template>

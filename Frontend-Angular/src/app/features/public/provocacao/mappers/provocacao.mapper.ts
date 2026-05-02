@@ -1,9 +1,12 @@
-import { Provocacao, ProvocacaoApiItem, ProvocacaoApiResponse } from '../models';
+import { Provocacao, ProvocacaoApiItem, ProvocacaoApiResponse, ProvocacaoPage } from '../models';
 
-export function mapProvocacaoApiResponseToProvocacoes(
+export function mapProvocacaoApiResponseToProvocacaoPage(
   response: ProvocacaoApiResponse,
-): Provocacao[] {
-  return response.allProvocacao.map(mapProvocacaoApiItemToProvocacao);
+): ProvocacaoPage {
+  return {
+    items: response.allProvocacao.map(mapProvocacaoApiItemToProvocacao),
+    totalRecords: response.rowcount,
+  };
 }
 
 export function mapProvocacaoApiItemToProvocacao(

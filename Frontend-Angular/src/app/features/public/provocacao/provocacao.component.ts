@@ -12,7 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { PublicFilterOptionsService } from '../services';
 import {ProvocacaoService} from './services';
 import {Provocacao} from './models';
-import {TableModule} from 'primeng/table';
+import {TableLazyLoadEvent, TableModule} from 'primeng/table';
 
 @Component({
   selector: 'app-provocacao',
@@ -42,7 +42,6 @@ export class ProvocacaoComponent implements OnInit {
       label: 'Tema',
       key: 'tema',
       extraOptions: {
-        editable: true,
         showClear: true
       },
       options: []
@@ -52,12 +51,15 @@ export class ProvocacaoComponent implements OnInit {
       label: 'Palavra-Chave',
       key: 'palavraChave',
       extraOptions: {
-        editable: true,
         showClear: true
       },
       options: []
     }
   ];
+  totalRecords = 0;
+  currentPage = 0;
+  rowsPage = 10;
+  loading = false;
 
   ngOnInit(): void {
     this.loadThemeOptions();
@@ -65,18 +67,33 @@ export class ProvocacaoComponent implements OnInit {
     this.loadProvocacoes();
   }
 
-  private loadProvocacoes(): void {
+  private loadProvocacoes(pageNum = 1, rowsPage = this.rowsPage): void {
+    this.loading = true;
+
     this.provocacaoService
-      .getProvocacoes()
+      .getProvocacoes(pageNum, rowsPage)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (provocacoes) => {
-          this.provocacoes = provocacoes;
+        next: (page) => {
+          this.provocacoes = page.items;
+          this.totalRecords = page.totalRecords;
+          this.currentPage = pageNum;
+          this.rowsPage = rowsPage;
+          this.loading = false;
         },
         error: (error) => {
           console.error('Error loading provocacoes', error);
+          this.loading = false;
         },
       });
+  }
+
+  onPageChange(event: TableLazyLoadEvent): void {
+    const rows = event.rows ?? this.rowsPage;
+    const first = event.first ?? 0;
+    const pageNum = Math.floor(first / rows) + 1;
+
+    this.loadProvocacoes(pageNum, rows);
   }
 
   onEdit(id: number): void {
