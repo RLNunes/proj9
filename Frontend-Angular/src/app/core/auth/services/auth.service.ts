@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { ApiService } from '../../services/api.service';
+import { Observable, catchError, of, tap } from 'rxjs';
+
+import { ApiService } from '../../services';
 import { AuthUser, LoginRequest } from '../models';
 
 @Injectable({
@@ -10,6 +10,10 @@ import { AuthUser, LoginRequest } from '../models';
 export class AuthService {
   private readonly api = inject(ApiService);
 
+  private readonly AUTH_LOGIN_PATH = 'auth/login';
+  private readonly AUTH_LOGOUT_PATH = 'auth/logout';
+  private readonly AUTH_ME_PATH = 'auth/me';
+
   private readonly currentUserSignal = signal<AuthUser | null>(null);
   private readonly isAuthenticatedSignal = signal(false);
 
@@ -17,16 +21,15 @@ export class AuthService {
   readonly isAuthenticated = computed(() => this.isAuthenticatedSignal());
 
   login(payload: LoginRequest): Observable<AuthUser> {
-    return this.api.post<AuthUser>('auth/login', payload).pipe(
+    return this.api.post<AuthUser>(this.AUTH_LOGIN_PATH, payload).pipe(
       tap((user) => {
-        this.currentUserSignal.set(user);
-        this.isAuthenticatedSignal.set(true);
+        this.setAuthenticatedUser(user);
       }),
     );
   }
 
   logout(): Observable<void> {
-    return this.api.post<void>('auth/logout', {}).pipe(
+    return this.api.post<void>(this.AUTH_LOGOUT_PATH, {}).pipe(
       tap(() => {
         this.clearSession();
       }),
@@ -34,10 +37,18 @@ export class AuthService {
   }
 
   fetchAuthenticatedUser(): Observable<AuthUser> {
-    return this.api.get<AuthUser>('auth/me').pipe(
+    return this.api.get<AuthUser>(this.AUTH_ME_PATH).pipe(
       tap((user) => {
-        this.currentUserSignal.set(user);
-        this.isAuthenticatedSignal.set(true);
+        this.setAuthenticatedUser(user);
+      }),
+    );
+  }
+
+  restoreSession(): Observable<AuthUser | null> {
+    return this.fetchAuthenticatedUser().pipe(
+      catchError(() => {
+        this.clearSession();
+        return of(null);
       }),
     );
   }
@@ -45,5 +56,10 @@ export class AuthService {
   clearSession(): void {
     this.currentUserSignal.set(null);
     this.isAuthenticatedSignal.set(false);
+  }
+
+  private setAuthenticatedUser(user: AuthUser): void {
+    this.currentUserSignal.set(user);
+    this.isAuthenticatedSignal.set(true);
   }
 }

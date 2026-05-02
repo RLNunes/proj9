@@ -1,1 +1,89 @@
-﻿<p>provocacao works!</p>
+﻿<app-entity-page-layout class="flex flex-col items-center gap-6">
+  <app-page-title
+    class="text-6xl font-semibold"
+    page-header
+    title="Provocação">
+  </app-page-title>
+  <app-generic-filter-form
+    class="flex flex-col w-full items-center gap-4"
+    page-filters
+    title="Filtro"
+    [fields]="filterFields"
+    (search)="onSearch($event)"
+    (clear)="onClear()">
+  </app-generic-filter-form>
+
+  <p-button
+    page-actions
+    class="self-start"
+    icon="pi pi-plus"
+    [raised]="true"
+    label="Criar Provocação">
+  </p-button>
+
+  @if (searchWarningMessage) {
+    <p class="text-sm text-orange-600">
+      {{ searchWarningMessage }}
+    </p>
+  }
+
+  <section page-content class="w-full">
+    <p-table
+      [value]="provocacoes"
+      [paginator]="!isFiltering"
+      [rows]="rowsPage"
+      [totalRecords]="totalRecords"
+      [lazy]="!isFiltering"
+      [loading]="loading"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      (onLazyLoad)="onPageChange($event)"
+      [tableStyle]="{ 'min-width': '70rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Editar</th>
+          <th>Nº</th>
+          <th>Destinatário Autoridade Tratamento</th>
+          <th>Resumo</th>
+          <th>Referência Documental</th>
+          <th>Pessoa Citadas</th>
+          <th>Requerente</th>
+          <th>Palavra Chave</th>
+          <th>Tema</th>
+          <th>Ano Provocação</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-provocacao>
+        <tr>
+          <td>
+            <p-button
+              icon="pi pi-pencil"
+              severity="secondary"
+              [text]="true"
+              (onClick)="onEdit(provocacao.id)">
+            </p-button>
+          </td>
+          <td>{{ provocacao.id }}</td>
+          <td>{{ provocacao.destinatarioAutoridadeTratamento }}</td>
+          <td>{{ provocacao.resumo }}</td>
+          <td>{{ provocacao.referenciaDocumental }}</td>
+          <td [innerHTML]="provocacao.pessoasCitadas"></td>
+          <td>{{ provocacao.requerente }}</td>
+          <td [innerHTML]="provocacao.palavraChave"></td>
+          <td [innerHTML]="provocacao.tema"></td>
+          <td>{{ provocacao.ano }}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="10" class="text-center">
+            Sem provocações para apresentar.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+
+</app-entity-page-layout>

@@ -11,6 +11,7 @@ describe('GenericFilterFormComponent', () => {
     {
       key: 'person',
       label: 'Person',
+      type: 'select',
       options: [
         { label: 'Person 1', value: 1 },
         { label: 'Person 2', value: 2 },
@@ -19,6 +20,7 @@ describe('GenericFilterFormComponent', () => {
     {
       key: 'theme',
       label: 'Theme',
+      type: 'select',
       options: [
         { label: 'Theme 1', value: 10 },
         { label: 'Theme 2', value: 20 },

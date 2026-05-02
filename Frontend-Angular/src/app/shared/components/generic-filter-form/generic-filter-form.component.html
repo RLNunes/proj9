@@ -1,28 +1,43 @@
-﻿<form [formGroup]="filterForm" class="flex items-center gap-2">
-  <h3>{{ title }}</h3>
-  <div class="flex flex-col gap-3">
+﻿<h2 class="text-4xl">{{ title }}</h2>
+<form [formGroup]="filterForm" class="flex flex-col gap-4 w-full items-center">
+  <div class="flex gap-10 w-full justify-center">
     @for (field of fields; track field.key) {
-      <p-select
-        [options]="field.options"
-        optionLabel="label"
-        optionValue="value"
-        [placeholder]="`Selecionar ${field.label}`"
-        [formControlName]="field.key"
-        [editable]="field.extraOptions?.editable ?? false"
-        [showClear]="field.extraOptions?.showClear ?? false"
-      />
+      @if (field.type === 'text') {
+        <input
+          pInputText
+          fluid
+          [placeholder]="field.placeholder ?? field.label"
+          [formControlName]="field.key"
+        />
+      }
+
+      @if (field.type === 'select') {
+        <p-select
+          fluid
+          [options]="field.options ?? []"
+          optionLabel="label"
+          optionValue="value"
+          [placeholder]="field.placeholder ?? ('Selecionar ' + field.label)"
+          [formControlName]="field.key"
+          [editable]="field.extraOptions?.editable ?? false"
+          [showClear]="field.extraOptions?.showClear ?? false"
+        />
+      }
     }
   </div>
   <div class="flex gap-2">
     <p-button
       label="Pesquisar"
       icon="pi pi-search"
+      severity="info"
+      [raised]="true"
       (onClick)="handleSearch()">
     </p-button>
 
     <p-button
       label="Limpar"
       severity="secondary"
+      [raised]="true"
       (onClick)="handleClear()">
     </p-button>
   </div>
