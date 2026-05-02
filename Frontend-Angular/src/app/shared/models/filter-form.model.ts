@@ -1,4 +1,6 @@
-﻿import {FormControl, FormGroup} from '@angular/forms';
+﻿import { FormControl, FormGroup } from '@angular/forms';
+
+export type FilterFieldType = 'text' | 'select';
 
 export type FilterFieldValue = string | number | null;
 
@@ -16,8 +18,9 @@ export interface FilterFieldOption {
 export interface FilterFieldForm {
   key: string;
   label: string;
+  type: FilterFieldType;
   placeholder?: string;
-  options: FilterFieldOption[];
+  options?: FilterFieldOption[];
   extraOptions?: FilterFieldExtraOptions;
 }
 
