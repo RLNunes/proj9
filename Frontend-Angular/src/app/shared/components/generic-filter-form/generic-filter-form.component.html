@@ -2,16 +2,25 @@
 <form [formGroup]="filterForm" class="flex flex-col gap-4 w-full items-center">
   <div class="flex gap-10 w-full">
     @for (field of fields; track field.key) {
-      <p-select
-        fluid
-        [options]="field.options"
-        optionLabel="label"
-        optionValue="value"
-        [placeholder]="`Selecionar ${field.label}`"
-        [formControlName]="field.key"
-        [editable]="field.extraOptions?.editable ?? false"
-        [showClear]="field.extraOptions?.showClear ?? false"
-      />
+      @if (field.type === 'text') {
+        <input
+          pInputText
+          [placeholder]="field.placeholder ?? field.label"
+          [formControlName]="field.key"
+        />
+      }
+
+      @if (field.type === 'select') {
+        <p-select
+          [options]="field.options ?? []"
+          optionLabel="label"
+          optionValue="value"
+          [placeholder]="field.placeholder ?? ('Selecionar ' + field.label)"
+          [formControlName]="field.key"
+          [editable]="field.extraOptions?.editable ?? false"
+          [showClear]="field.extraOptions?.showClear ?? false"
+        />
+      }
     }
   </div>
   <div class="flex gap-2">

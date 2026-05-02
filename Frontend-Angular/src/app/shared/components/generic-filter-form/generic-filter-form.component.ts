@@ -8,6 +8,7 @@ import {
   FilterFormGroup,
   FilterFormValue
 } from '../../models';
+import {InputText} from 'primeng/inputtext';
 
 @Component({
   selector: 'app-generic-filter-form',
@@ -16,6 +17,7 @@ import {
     ReactiveFormsModule,
     SelectModule,
     ButtonModule,
+    InputText,
   ],
   templateUrl: './generic-filter-form.component.html',
 })
