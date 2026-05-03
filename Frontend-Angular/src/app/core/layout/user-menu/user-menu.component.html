@@ -5,31 +5,29 @@
       type="button"
       class="cursor-pointer border-none bg-transparent p-0 rounded-full"
       aria-label="Login"
-      (click)="onAvatarClick($event)"
+      (click)="onAvatarClick()"
     >
       <p-avatar icon="pi pi-user" shape="circle" size="normal" />
     </button>
   } @else {
-    <p-avatar icon="pi pi-user" shape="circle" size="normal" />
-
     <button
       type="button"
-      class="cursor-pointer border-none bg-transparent p-0 flex items-center"
+      class="cursor-pointer border-none bg-transparent p-0 flex items-center gap-1"
       aria-label="Abrir menu"
       (click)="op.toggle($event)"
     >
+      <p-avatar icon="pi pi-user" shape="circle" size="normal" />
       <i class="pi pi-chevron-down text-xs text-gray-500"></i>
     </button>
 
-    <p-popover #op [dismissable]="true" styleClass="p-0" align="right">
-      <div class="flex flex-col min-w-36">
-
+    <p-popover #op [dismissable]="true" styleClass="p-0" appendTo="body">
+      <div class="flex flex-col min-w-40">
         @for (domain of dropdownDomains(); track domain.link) {
           <button
             type="button"
             pRipple
             class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-none bg-transparent cursor-pointer text-left w-full"
-            (click)="navigateTo(domain.link)"
+            (click)="navigateTo(domain.link); op.hide()"
           >
             {{ domain.label }}
           </button>
@@ -43,7 +41,7 @@
           type="button"
           pRipple
           class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-none bg-transparent cursor-pointer text-left w-full"
-          (click)="logout()"
+          (click)="logout(); op.hide()"
         >
           Sair
         </button>

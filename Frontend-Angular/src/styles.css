@@ -1,2 +1,16 @@
 @import "tailwindcss";
 @import "primeicons/primeicons.css";
+
+
+.p-popover {
+  transform: translateX(-30px) !important;
+}
+
+.p-popover::before,
+.p-popover::after {
+  display: none !important;
+}
+
+.p-popover {
+  margin-left: 40px !important;
+}
