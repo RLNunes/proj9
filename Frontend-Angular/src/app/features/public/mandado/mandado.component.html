@@ -1,1 +1,90 @@
-﻿<p>mandado works!</p>
+﻿<app-entity-page-layout class="flex flex-col items-center gap-6">
+  <app-page-title
+    class="text-6xl font-semibold"
+    page-header
+    title="Mandado">
+  </app-page-title>
+
+  <app-generic-filter-form
+    class="flex flex-col w-full items-center gap-4"
+    page-filters
+    title="Filtro"
+    [fields]="filterFields"
+    (search)="onSearch($event)"
+    (clear)="onClear()">
+  </app-generic-filter-form>
+
+  <p-button
+    page-actions
+    class="self-start"
+    icon="pi pi-plus"
+    [raised]="true"
+    label="Criar Mandado">
+  </p-button>
+
+  @if (searchWarningMessage) {
+    <p class="text-sm text-orange-600">
+      {{ searchWarningMessage }}
+    </p>
+  }
+
+  <section page-content class="w-full">
+    <p-table
+      [value]="mandados"
+      [paginator]="!isFiltering"
+      [rows]="rowsPage"
+      [totalRecords]="totalRecords"
+      [lazy]="!isFiltering"
+      [loading]="loading"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      (onLazyLoad)="onPageChange($event)"
+      [tableStyle]="{ 'min-width': '70rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Editar</th>
+          <th>Nº</th>
+          <th>Referência Documental</th>
+          <th>Registro</th>
+          <th>Resumo</th>
+          <th>Pessoas Citadas</th>
+          <th>Requerente</th>
+          <th>Palavra Chave</th>
+          <th>Tema</th>
+          <th>Ano Mandado</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-mandado>
+        <tr>
+          <td>
+            <p-button
+              icon="pi pi-pencil"
+              severity="secondary"
+              [text]="true"
+              (onClick)="onEdit(mandado.id)">
+            </p-button>
+          </td>
+          <td>{{ mandado.id }}</td>
+          <td>{{ mandado.referenciaDocumental }}</td>
+          <td>{{ mandado.registro }}</td>
+          <td>{{ mandado.resumo }}</td>
+          <td [innerHTML]="mandado.pessoasCitadas"></td>
+          <td>{{ mandado.requerente }}</td>
+          <td [innerHTML]="mandado.palavraChave"></td>
+          <td [innerHTML]="mandado.tema"></td>
+          <td>{{ mandado.ano }}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="10" class="text-center">
+            Sem mandados para apresentar.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+
+</app-entity-page-layout>
