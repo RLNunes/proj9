@@ -2,14 +2,17 @@ FROM payara/server-full:5.2022.5
 
 WORKDIR /opt/payara
 
-# Substitui o domain.xml com configurações automáticas (JNDI, JDBC, etc.)
-COPY domain.xml /opt/payara/appserver/glassfish/domains/domain1/config/domain.xml
+# domain.xml
+COPY Payara/domain.xml \
+     /opt/payara/appserver/glassfish/domains/domain1/config/domain.xml
 
-# Copia driver do PostgreSQL
-COPY drivers/postgresql-42.7.5.jar /opt/payara/appserver/glassfish/lib/
+# driver PostgreSQL
+COPY Payara/drivers/postgresql-42.7.5.jar \
+     /opt/payara/appserver/glassfish/lib/
 
-# WAR da aplicação será auto-deployed
-COPY deploy/CircPeticionario.war /opt/payara/appserver/glassfish/domains/domain1/autodeploy/
+# WAR da aplicação
+COPY CircPeticionario-WebApp/target/CircPeticionario.war \
+     /opt/payara/appserver/glassfish/domains/domain1/autodeploy/
 
 EXPOSE 8080 4848
 

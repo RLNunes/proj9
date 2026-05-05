@@ -1,11 +1,56 @@
-﻿<button
-  type="button"
-  class="flex items-center gap-2"
-  aria-label="Abrir área do utilizador"
-  (click)="onAvatarClick()"
->
-  <p-avatar icon="pi pi-user" shape="circle"></p-avatar>
-  <i class="pi pi-chevron-down text-xs"></i>
-</button>
+﻿<div class="flex items-center gap-1 mr-8">
+
+  @if (!isAuthenticated()) {
+    <button
+      type="button"
+      class="cursor-pointer border-none bg-transparent p-0 rounded-full"
+      aria-label="Login"
+      (click)="onAvatarClick($event)"
+    >
+      <p-avatar icon="pi pi-user" shape="circle" size="normal" />
+    </button>
+  } @else {
+    <p-avatar icon="pi pi-user" shape="circle" size="normal" />
+
+    <button
+      type="button"
+      class="cursor-pointer border-none bg-transparent p-0 flex items-center"
+      aria-label="Abrir menu"
+      (click)="op.toggle($event)"
+    >
+      <i class="pi pi-chevron-down text-xs text-gray-500"></i>
+    </button>
+
+    <p-popover #op [dismissable]="true" styleClass="p-0" align="right">
+      <div class="flex flex-col min-w-36">
+
+        @for (domain of dropdownDomains(); track domain.link) {
+          <button
+            type="button"
+            pRipple
+            class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-none bg-transparent cursor-pointer text-left w-full"
+            (click)="navigateTo(domain.link)"
+          >
+            {{ domain.label }}
+          </button>
+        }
+
+        @if (dropdownDomains().length > 0) {
+          <hr class="my-1 border-gray-200 mx-0" />
+        }
+
+        <button
+          type="button"
+          pRipple
+          class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-none bg-transparent cursor-pointer text-left w-full"
+          (click)="logout()"
+        >
+          Sair
+        </button>
+      </div>
+    </p-popover>
+  }
+
+</div>
 
 <app-login-modal />

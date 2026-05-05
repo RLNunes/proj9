@@ -7,8 +7,15 @@ import {
   HeaderConfig,
   HeaderDomain,
   HeaderDomainConfig,
+  UserDomainItem,
 } from '../models/header-config.model';
 import { AuthService } from '../auth/services/auth.service';
+
+const ALL_USER_DOMAINS: Record<HeaderDomain, UserDomainItem> = {
+  admin: { label: 'Administração', link: '/admin' },
+  consulta: { label: 'Consulta', link: '/consulta' },
+  home: { label: 'Página Inicial', link: '/home' },
+};
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +37,20 @@ export class HeaderStateService {
     const authenticated = this.authService.isAuthenticated();
 
     return this.buildHeaderConfig(baseConfig, url, authenticated);
+  });
+
+  readonly dropdownDomains = computed<UserDomainItem[]>(() => {
+    const current = this.currentDomain();
+    const user = this.authService.currentUser();
+    const isAdmin = user?.admin === 'Y';
+
+    const allowedDomains: HeaderDomain[] = isAdmin
+      ? ['admin', 'consulta']
+      : ['consulta'];
+
+    return allowedDomains
+      .filter((d) => d !== current)
+      .map((d) => ALL_USER_DOMAINS[d]);
   });
 
   constructor() {
